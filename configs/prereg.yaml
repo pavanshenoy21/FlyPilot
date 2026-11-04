@@ -1,0 +1,127 @@
+# FlyPilot pre-registered evaluation values.
+#
+# STATUS: DRAFT (Phase 1E). Frozen at Gate G4 (Phase 8). Until then nothing here is final.
+# After freezing, any change must be recorded in decisions_log.md as a deviation.
+#
+# Value markers:
+#   locked:  already settled in 02_locked_decisions.md / 04_evaluation_protocol.md (decision number given)
+#   tbd:     not yet decided; must be filled before G4. Never guess a value to fill a tbd.
+
+meta:
+  status: draft
+  frozen: false
+  frozen_at: null          # set at Gate G4
+  hypothesis: >
+    For looming-dodge, the real connectome wiring beats shuffled wiring, and matches or
+    beats a from-scratch CNN on early warning, data efficiency and robustness,
+    especially with little training data.
+  scope: One task (looming escape), in simulation. No claim about vision in general or real-world flight.
+
+models:                    # locked: 01_project_overview
+  - real_fly_circuit
+  - shuffled_fly_circuit
+  - cnn_from_scratch       # primary baseline
+  - resnet18_temporal      # secondary reference; first to cut if time slips
+
+fly:
+  circuit_scope: LPLC2 + LC4 -> giant fiber (left and right)      # locked: decision 1
+  neuron_model: leaky_integrate_and_fire                          # locked: decision 2
+  weight_rule: synapse_count * global_scale                       # locked: decision 3
+  transmitter_signs:                                              # locked: decision 3, 6
+    ACh: excitatory
+    GABA: inhibitory
+    glutamate: inhibitory
+    other: drop_and_report
+  global_scale: null       # tbd: tuned once on the calibration set in Phase 6, then frozen
+  lif_constants: null      # tbd: from published ranges, recorded in configs/lif_params.yaml (Phase 4)
+  front_end: reichardt_fixed_no_learning                          # locked: decision 8
+  receptive_fields: tbd    # tbd: connectome positions if extractable, else even tiling (decided at Gate G1)
+  direction_rule: first_giant_fiber_to_spike_gives_threat_side_dodge_opposite   # locked: decision 5
+  trigger: first_giant_fiber_spike                                # locked: decision 21
+  calibration_episodes: 30                                        # locked: decision 22, 23
+
+shuffle:                   # locked: decision 12
+  method: degree_preserving_rewire   # keeps in/out degree, signs, total synapse count
+  seeds_min: 20
+  report: mean_and_spread_plus_real_circuit_rank
+
+cnn:
+  window:                  # locked: decision 14
+    camera_fps: 30
+    window_slides_every_frame: true
+    frames_in_window: 6
+    frame_stride_within_window: 3        # about 0.5 s of history
+  input: full_greyscale_frame            # locked: decision 13
+  frame_size: tbd                        # tbd: 128x128 proposed (square; library camera is 60-degree, aspect 1.0)
+  outputs: [dodge_trigger, left_right]   # locked: decision 13
+  from_scratch:
+    architecture: small_cnn              # locked: decision 13 (layer counts fixed in Phase 10, before training)
+  resnet18_temporal:                     # locked: decision 15
+    backbone: resnet18_imagenet_frozen
+    per_frame_input: greyscale_copied_to_3_channels
+    temporal_head: tbd                   # tbd: 1d_conv or gru, chosen in Phase 10 before training
+  tuning:                                # locked: decision 16
+    grid:
+      learning_rates: tbd                # tbd: three values
+      weight_decays: tbd                 # tbd: two values
+    early_stopping: true
+    validation_fraction: 0.20            # taken from inside each training budget
+    small_budget_rule:
+      budgets: [10, 30]
+      method: one_fixed_setting_with_k_fold_cross_validation
+      k: tbd
+    frozen_after_selection: true
+
+episodes:                  # locked: decision 19
+  generator: scripted_gym_pybullet_drones
+  one_object_per_episode: true
+  types: [approaching, passing, receding]
+  varied: [speed, size, approach_angle, start_side]
+  exact_ttc: true
+  off_centre_main_set: true
+  head_on_subset:                        # locked: decision 6
+    reported_separately: true
+    either_side_counts_as_correct: true
+  angle_thresholds:
+    off_centre_min_deg: tbd              # tbd: set in Phase 8
+    head_on_max_deg: tbd                 # tbd: set in Phase 8
+  disjoint_seed_sets:
+    fly_calibration: {count: 30, seeds: tbd}
+    cnn_training_pool: {sizes: [10, 30, 100, 300, 1000], seeds: tbd}
+    shared_no_dodge_threshold_set: {count: 100, seeds: tbd}   # approximate, exact count fixed in Phase 8
+    validation: {seeds: tbd}
+    test: {count: tbd, seeds: tbd}
+
+simulator:                 # from Phase 1C smoke test
+  engine: gym-pybullet-drones
+  commit: 15c426c85ac8e7a5db66d8b100f48858133357f6
+  physics_hz: 240
+  camera_capture: every_8th_physics_step   # 240 / 8 = 30 fps
+  dodge: fixed_size_sidestep_same_for_all_models   # locked: decision 20
+
+evaluation:
+  early_warning:                         # locked: decision 21
+    metric: ttc_at_trigger
+    at_false_alarm_rate_max: 0.05
+    threshold_set_on: shared_no_dodge_threshold_set   # same for every model, fly included
+  secondary_metrics: [false_alarm_rate, dodge_success, crash_rate]
+  data_efficiency:                       # locked: decision 22
+    sizes: [10, 30, 100, 300, 1000]
+    training_seeds_per_size_min: 5       # suggested in 04; confirm at G4
+    fly_shown_as: flat_line_with_marker_at_30_episodes
+  match_rule:                            # locked: decision 23
+    cnn_matches_fly_if: cnn_mean_ttc_within_fly_95_percent_interval
+    at_false_alarm_rate_max: 0.05
+    if_no_match: "didn't match within 1000"
+  robustness:                            # locked: decision 24
+    train_and_calibrate_on: clean_only
+    conditions: [lower_contrast, pixel_noise, motion_blur, new_background_texture, non_approaching_distractors]
+    severities_per_condition: 3
+    severity_values: tbd                 # tbd: numeric levels, set in Phase 8
+  extras_if_time: [low_res_cnn_check, flyvis_front_end_variant]   # reported separately, never mixed in
+
+race_demo:                 # locked: decision 25
+  drones: [real_fly_circuit, cnn_from_scratch]
+  cnn_training_size: 100
+  sequence: fixed_seed_scripted
+  hit_drone_is_out: true

@@ -2,12 +2,13 @@
 name = "flypilot"
 version = "0.1.0"
 description = "FlyPilot: a connectome-wired looming-escape circuit as a drone's vision system (Bio-Inspired Engineering EL, RVCE)"
-requires-python = ">=3.11,<3.12"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "numpy>=2.0,<3",
     "pyyaml>=6.0",
     "pybullet>=3.2.5",
     "torch>=2.5",
+    "gym-pybullet-drones",
 ]
 
 [dependency-groups]
@@ -24,10 +25,14 @@ explicit = true
 
 [tool.uv.sources]
 torch = { index = "pytorch-cpu" }
+# Not on PyPI. Pinned to a commit so the simulator version is reproducible.
+gym-pybullet-drones = { git = "https://github.com/utiasDSL/gym-pybullet-drones.git", rev = "15c426c85ac8e7a5db66d8b100f48858133357f6" }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# Lets tests import project folders (fly, sim, models, ...) from the project root.
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
-target-version = "py311"
+target-version = "py312"

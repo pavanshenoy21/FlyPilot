@@ -1,0 +1,23 @@
+pybullet build time: Nov  3 2026 23:46:49
+/home/pavvy/Documents/RVCE/Sem_3/EL/Bio-Insp EL/.venv/lib64/python3.12/site-packages/gymnasium/spaces/box.py:297: UserWarning: [33mWARN: Box low's precision lowered by casting to float32, current low.dtype=float64[0m
+  gym.logger.warn(
+/home/pavvy/Documents/RVCE/Sem_3/EL/Bio-Insp EL/.venv/lib64/python3.12/site-packages/gymnasium/spaces/box.py:364: UserWarning: [33mWARN: Box high's precision lowered by casting to float32, current high.dtype=float64[0m
+  gym.logger.warn(
+== versions
+python                3.12.16
+platform              Linux-7.2.13-200.fc44.x86_64-x86_64-with-glibc2.43
+numpy                 2.5.4
+pybullet              3.2.7
+torch                 2.15.0+cpu
+gym-pybullet-drones   2.2.0
+gymnasium             1.4.0
+pytest                9.2.0
+torch cuda available  False
+== one headless step
+obs shape             (1, 20)
+stepped              ok  (terminated=False, truncated=False)
+drone z after step    0.1125
+== one headless camera frame
+rgb frame shape       (128, 128, 4) int64
+rgb frame min/max     76 255
+== result: PASS
