@@ -1,0 +1,44 @@
+# Exactly which FlyWire data the subgraph was built from (Phase 2C).
+# If any value here changes, rebuild with connectome/build_subgraph.py and log it in decisions_log.md.
+
+flywire:
+  release: "783"                      # public FlyWire snapshot
+  species_sex: Drosophila melanogaster, adult female brain (FAFB)
+  cite:
+    - "Dorkenwald et al. (2024), Nature 634, 124-138"        # connectome
+    - "Schlegel et al. (2024), Nature 634, 139-152"          # cell-type annotation
+    - "Matsliah et al. (2024), Nature 634, 166-180"          # optic-lobe cell types   # citation details to verify
+
+connections:
+  source: https://zenodo.org/records/10676866
+  license: CC-BY-4.0
+  file: connectome/data/raw/proofread_connections_783.feather
+  size_bytes: 852022274
+  md5: f48f972d262323a102aed49af1396b8a            # matches the checksum published by Zenodo
+  root_ids_file: connectome/data/raw/proofread_root_ids_783.npy
+  root_ids_md5: e0e6c19732fd8c7a4e39a2d170105421   # matches Zenodo
+
+annotations:
+  source: https://github.com/flyconnectome/flywire_annotations
+  file: connectome/data/raw/Supplemental_file1_neuron_annotations.tsv
+  downloaded: "2026-11-04 from the main branch"
+  repo_head_checked: "2026-11-05, a83b2776d60d5764cef36b927f5f9679c16c47a2"
+  # Not proven to be the same commit as the file I downloaded. The sha256 below is what counts.
+  sha256: b214970b55d2fbe0853bba536fdcb9e28730f4eb7ab06f600491df795da683cd
+  size_bytes: 31720298
+  license: unconfirmed                # the repository's LICENSE file returned 404; cite the papers
+
+subgraph:
+  design: direct LPLC2 and LC4 -> giant fiber (DNp01) connections only
+  built_by: connectome/build_subgraph.py
+  output_dir: connectome/data/subgraph_v783
+  nodes_sha256: 18ee135fd4dcef0f42d351716eb9804d0eb302d2a024d78773ed5598901767ab
+  edges_sha256: 22365df8d7522d7fff69eadc6c8714021bb39266c15edde94716b780b1781baf
+  counts:
+    nodes: 295          # 2 giant fibers + 293 source neurons with a direct edge
+    edges: 293
+    synapses: 1885
+  sign_rule: >
+    known_nt from the annotation file when present (Davis et al. 2020 for all LPLC2 and LC4),
+    otherwise top_nt. Per-connection probabilities in the connection table are stored but
+    not used for signs (see decisions_log.md, entry 13).

@@ -51,8 +51,10 @@ Format: date · decision · reason · who decided.
 12. **`pandas` and `pyarrow` added to the project** (needed to read the Feather files).
     *Decided by:* Claude, reported to Pavan.
 
-13. **Transmitter signs will use the connection table's per-connection averages** (`ach_avg`, `gaba_avg`, `glut_avg`, ...) as well as the annotation file's `top_nt`. Which one sets the sign is not yet decided; to be settled in 2C or 2D, and recorded here. Locked rule (decision 3 in `02`) is unchanged: ACh excitatory, GABA and glutamate inhibitory.
-    *Status:* open.
+13. **Transmitter signs come from the neuron-level label, not the per-connection probabilities.** Rule: use `known_nt` (experimental, Davis et al. 2020 for all LPLC2 and LC4) when the annotation file has it, otherwise `top_nt` (FlyWire's prediction). The locked rule (decision 3 in `02`) is unchanged: ACh excitatory, GABA and glutamate inhibitory. Result: all 293 edges excitatory, none dropped.
+    *Reason:* the per-connection probabilities pick glutamate for 55% of our synapses and agree with the neuron-level label on only 33.6% of them, and the disagreement does not shrink on bigger edges. The experimentally known label is the stronger evidence. See `progress_log.md`, 2C.
+    *Decided by:* Claude, **pending Pavan's review**. It affects every connection weight sign, so it is worth a second look.
+    *To report:* as a limitation.
 
 ## Still open from earlier planning (see `06_open_items.md`)
 

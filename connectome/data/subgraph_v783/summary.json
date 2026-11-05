@@ -1,0 +1,65 @@
+{
+  "edges": 293,
+  "edges_by_sign_source": {
+    "known": 293
+  },
+  "edges_where_neuron_and_connection_transmitter_disagree": 185,
+  "giant_fibers": {
+    "gf_left": {
+      "by_type": {
+        "LC4": {
+          "neurons": 54,
+          "synapses": 374
+        },
+        "LPLC2": {
+          "neurons": 94,
+          "synapses": 458
+        }
+      },
+      "presynaptic_neurons": 148,
+      "synapses": 832
+    },
+    "gf_right": {
+      "by_type": {
+        "LC4": {
+          "neurons": 50,
+          "synapses": 431
+        },
+        "LPLC2": {
+          "neurons": 95,
+          "synapses": 622
+        }
+      },
+      "presynaptic_neurons": 145,
+      "synapses": 1053
+    }
+  },
+  "same_side_fraction_by_synapse": 1.0,
+  "sign_counts_by_edge": {
+    "1": 293
+  },
+  "sources": {
+    "LC4_left": {
+      "neurons_in_dataset": 54,
+      "neurons_with_direct_edge_to_gf": 54,
+      "neurons_without_edge": 0
+    },
+    "LC4_right": {
+      "neurons_in_dataset": 50,
+      "neurons_with_direct_edge_to_gf": 50,
+      "neurons_without_edge": 0
+    },
+    "LPLC2_left": {
+      "neurons_in_dataset": 108,
+      "neurons_with_direct_edge_to_gf": 94,
+      "neurons_without_edge": 14
+    },
+    "LPLC2_right": {
+      "neurons_in_dataset": 102,
+      "neurons_with_direct_edge_to_gf": 95,
+      "neurons_without_edge": 7
+    }
+  },
+  "synapses": 1885,
+  "synapses_dropped_unknown_transmitter": 0
+}

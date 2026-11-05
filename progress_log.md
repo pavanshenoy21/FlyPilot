@@ -77,5 +77,24 @@ Dated record of what was done each session. Newest entry last. Every claim here 
 - **Low transmitter confidence on the giant fibers:** `top_nt_conf` is 0.27 (right) and 0.32 (left), which is why their predicted transmitters disagree. Irrelevant for our readout, as noted earlier.
 - **About 6–8% of LPLC2 neurons** (7 of 102 right, 14 of 108 left) do not connect to a giant fiber directly. Not an error, but the subgraph builder must handle neurons with no path.
 
+## 2026-11-05 — Phase 2, sub-stage 2C (build the subgraph)
+
+**Done**
+- `connectome/build_subgraph.py`: small testable functions; selects LPLC2 and LC4 neurons and the two giant fibers (DNp01), collapses per-neuropil rows into one edge per neuron pair, assigns signs, writes `nodes.csv`, `edges.csv`, `summary.json` to `connectome/data/subgraph_v783/` (tracked in Git, about 100 KB).
+- `tests/test_subgraph.py`: 14 tests, 13 on small synthetic tables plus one that reruns the real data and checks the 2B numbers. Whole suite: 22 passed. `ruff check` and `ruff format` clean.
+- `configs/data_version.yaml`: pins the release, file sizes, MD5 and SHA-256 checksums, and the output hashes.
+
+**The subgraph** (direct LPLC2 / LC4 → giant fiber only, as agreed): 295 nodes (2 giant fibers + 293 source neurons), 293 edges, 1,885 synapses. Right giant fiber: 145 sources, 1,053 synapses. Left giant fiber: 148 sources, 832 synapses. 100% of synapses are same-side. The 21 LPLC2 neurons with no direct edge (14 left, 7 right) are left out of the nodes; every LC4 neuron has an edge. The numbers match the 2B check exactly.
+
+**Finding: the per-connection transmitter data disagrees with the neuron-level label.** The connection table gives, per connection, an average predicted probability for each transmitter. For our 293 edges:
+- The most probable transmitter is glutamate for 144 edges (1,028 synapses, 55%), acetylcholine for 108 edges (633 synapses), dopamine for 37, GABA and serotonin for 2 each. It agrees with the neuron-level label on only 33.6% of synapses.
+- It is not small-sample noise: agreement does not improve on larger edges (42% on edges of 1–2 synapses, 30% on edges of more than 10).
+- The neuron-level label says acetylcholine for all 314 LPLC2 and LC4 neurons, and the annotation file's `known_nt` column backs this with experimental evidence for every one of them (source: Davis et al. 2020, TAPIN-seq).
+- Per-connection probabilities are diffuse (synapse-weighted means: ach 0.30, glut 0.34, dopamine 0.20), so the top pick is often a near-tie.
+
+**Resolution (decision 13):** signs use `known_nt` when it exists, otherwise `top_nt`. All 293 edges used `known_nt`, so all 293 are excitatory and no synapses are dropped. The per-connection numbers stay in `edges.csv` for comparison only. To be stated as a limitation: the transmitter evidence is neuron-level, and the per-connection predictions disagree with it.
+
+**Not verified:** whether the experimental evidence (TAPIN-seq) reflects the transmitter used at the giant-fiber synapses specifically. I'm trusting the annotation file's `known_nt` and its stated source; I have not read the Davis et al. paper.
+
 **Next**
-- 2C: turn the inline analysis into a saved, tested script (`connectome/build_subgraph.py`) that writes the subgraph to disk, and pin the data version in `configs/data_version.yaml`.
+- Phase 2 is complete when you've reviewed 2A–2C. Then Phase 3 (subgraph analysis and Gate G1): the remaining analysis is receptive-field extraction, a subgraph figure, and the G1 write-up.
