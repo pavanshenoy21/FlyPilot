@@ -50,5 +50,32 @@ Dated record of what was done each session. Newest entry last. Every claim here 
 - Whether the annotation file's `root_id` values match the 783 root-id list.
 - How many connections run from LPLC2/LC4 to each giant fiber.
 
+## 2026-11-05 — Phase 2, sub-stage 2B (download and verify)
+
+**Done**
+- `.gitignore` now ignores `connectome/data/raw/` and `__pycache__/` (checked with `git check-ignore`). `pandas` 3.1.0 and `pyarrow` 26.0.1 added to the project.
+- Downloaded into `connectome/data/raw/`: `proofread_connections_783.feather` (852,022,274 bytes), `proofread_root_ids_783.npy`, `Supplemental_file1_neuron_annotations.tsv`. Both Zenodo files match their published MD5 checksums. The annotation file's SHA-256 starts `b214970b55d2fbe0` (no published checksum to compare).
+- The big download was interrupted once (curl error 56, connection timed out) at 87%. I resumed it with `curl -C -` and re-verified; my first "done" marker had been written even though curl failed, so I checked the file size and checksum and did not trust the marker.
+
+**Answers to the three open points** (release 783, numbers from inline analysis, not yet a saved script):
+
+1. **Transmitter data is in the connection table.** Columns: `pre_pt_root_id`, `post_pt_root_id`, `neuropil`, `syn_count`, and per-connection average transmitter probabilities `gaba_avg`, `ach_avg`, `glut_avg`, `oct_avg`, `ser_avg`, `da_avg`. 16,847,997 rows (one per neuron pair per neuropil); 15,091,983 distinct neuron pairs; 54,492,922 synapses in total.
+2. **Root ids line up.** 139,241 of 139,248 annotated neurons (99.99%) are in the 783 proofread list. 14 proofread ids have no annotation row.
+3. **Connections into the giant fibers.** The giant fiber is cell type `DNp01` (hemibrain label "Giant Fiber").
+
+| | Right GF | Left GF |
+|---|---|---|
+| Presynaptic neurons / synapses (all inputs) | 483 / 5,147 | 479 / 4,327 |
+| LPLC2 → GF | 95 neurons, 622 synapses | 94 neurons, 458 synapses |
+| LC4 → GF | 50 neurons, 431 synapses | 54 neurons, 374 synapses |
+| LPLC2 + LC4 share of GF input synapses | 20.5% | 19.2% |
+| Side of LPLC2/LC4 inputs | 100% right | 100% left |
+
+**What this means for Gate G1**
+- **Same-side input holds completely.** Every LPLC2 and LC4 neuron feeding a giant fiber sits on that fiber's own side. This supports the two-giant-fiber direction rule (decision 5).
+- **The circuit is a partial model of the giant fiber.** LPLC2 and LC4 supply only about 20% of each giant fiber's input synapses. The other top inputs are other cell types (CB3707, DNp70, PVLP122b, SAD014, CL038, PVLP010, ...), which our circuit leaves out. Must be declared as a limitation.
+- **Low transmitter confidence on the giant fibers:** `top_nt_conf` is 0.27 (right) and 0.32 (left), which is why their predicted transmitters disagree. Irrelevant for our readout, as noted earlier.
+- **About 6–8% of LPLC2 neurons** (7 of 102 right, 14 of 108 left) do not connect to a giant fiber directly. Not an error, but the subgraph builder must handle neurons with no path.
+
 **Next**
-- 2B: download the two files into `connectome/data/raw/` (after `.gitignore` covers it), then check the three points above.
+- 2C: turn the inline analysis into a saved, tested script (`connectome/build_subgraph.py`) that writes the subgraph to disk, and pin the data version in `configs/data_version.yaml`.

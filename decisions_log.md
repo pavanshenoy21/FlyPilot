@@ -40,7 +40,23 @@ Format: date · decision · reason · who decided.
 9. **`configs/prereg.yaml` created as a draft.** Values already locked in `02` and `04` are filled in with their decision numbers. Everything not yet decided is `tbd`, never guessed. It is frozen at Gate G4 (Phase 8).
    *Decided by:* Claude, to be reviewed by Pavan.
 
+## 2026-11-05
+
+10. **FlyWire data route: Zenodo snapshot 783 plus the public annotation file.** No FlyWire account or token is needed. Files saved in `connectome/data/raw/`, checksums verified.
+    *Decided by:* Claude, approved by Pavan (2B go-ahead).
+
+11. **`.gitignore` extended** with `connectome/data/raw/` and `__pycache__/`. The existing nine-file list was left alone (that question is still open, see below).
+    *Decided by:* Claude, approved by Pavan.
+
+12. **`pandas` and `pyarrow` added to the project** (needed to read the Feather files).
+    *Decided by:* Claude, reported to Pavan.
+
+13. **Transmitter signs will use the connection table's per-connection averages** (`ach_avg`, `gaba_avg`, `glut_avg`, ...) as well as the annotation file's `top_nt`. Which one sets the sign is not yet decided; to be settled in 2C or 2D, and recorded here. Locked rule (decision 3 in `02`) is unchanged: ACh excitatory, GABA and glutamate inhibitory.
+    *Status:* open.
+
 ## Still open from earlier planning (see `06_open_items.md`)
+
+- **`.gitignore` question:** it still excludes the planning documents, the abstract and the deck. Waiting for Pavan.
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).
 - Teammate roles on the slides (placeholders for now).

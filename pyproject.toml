@@ -9,6 +9,8 @@ dependencies = [
     "pybullet>=3.2.5",
     "torch>=2.5",
     "gym-pybullet-drones",
+    "pandas>=3.1.0",
+    "pyarrow>=26.0.1",
 ]
 
 [dependency-groups]
