@@ -184,3 +184,16 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Limits to remember:** `i_ext` (direct input in mV) is our addition for tests and the stimulus drive. The synaptic current is a single exponential decay, as in the source code, not a true alpha function.
 
 **Next:** 4B: spike recording (4.3) and the network runner with an input schedule (4.4), tested on a toy 3-neuron graph.
+
+## 2026-11-07 — Phase 4, sub-stage 4B (spike recording and network runner)
+
+**Done (4.3, 4.4)**
+- `fly/lif.py`: `SpikeRecord` (every spike as step and neuron index; times in ms, per-neuron counts, first-spike time, save and load as `.npz`), `run_network(net, n_steps, schedule, watch)` (resets, runs, returns the record and optional voltage traces; the schedule is an array `[steps, neurons]`, a function of the step, or none) and `run_graph(node_ids, edges, scale, n_steps, schedule)` (builds the weight matrix and runs).
+- `tests/test_lif.py`: now 14 tests. New: toy 3-neuron graph (driven neuron fires, its target fires after it, the inhibited neuron never fires and drops below rest); no input gives no spikes; schedule as array equals schedule as function; two runs of the same network give identical spikes; spike record round-trips through a file.
+- `fly/demo_lif.py` (added after 4A): a runnable look at the 3-neuron chain.
+
+**Checks:** whole suite 50 passed; ruff clean.
+
+**Phase 4 acceptance:** all tests pass; no parameter tuned against looming data. Met. The runner handles the 295-node subgraph only as a dense matrix (295 x 295), which is fine at this size.
+
+**Next:** Phase 5, stimuli and the Reichardt front end. 5.1 first: synthetic looming, passing and receding dots with exact time-to-collision.

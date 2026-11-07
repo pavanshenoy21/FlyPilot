@@ -1,11 +1,19 @@
-"""Tests for fly/lif.py (Phase 4A): neuron update, signed synapses, delay."""
+"""Tests for fly/lif.py (Phase 4): neuron update, signed synapses, delay, recording, runner."""
 
 import math
 
 import numpy as np
 import pytest
 
-from fly.lif import LIFNetwork, load_params, synaptic_matrix, transmitter_sign
+from fly.lif import (
+    LIFNetwork,
+    SpikeRecord,
+    load_params,
+    run_graph,
+    run_network,
+    synaptic_matrix,
+    transmitter_sign,
+)
 
 P = load_params()
 
@@ -92,3 +100,64 @@ def test_reset_restores_the_initial_state():
         net.step(np.array([30.0, 0.0]))
     net.reset()
     assert np.all(net.v == P.v_rest_mV) and np.all(net.g == 0) and net.t_step == 0
+
+
+# ---- 4B: recording and runner ----
+
+
+TOY_NODES = [10, 20, 30]
+TOY_EDGES = {  # 10 excites 20, 20 inhibits 30
+    "pre": [10, 20],
+    "post": [20, 30],
+    "syn_count": [150, 150],
+    "transmitter": ["acetylcholine", "gaba"],
+}
+
+
+def toy_schedule(n_steps: int) -> np.ndarray:
+    s = np.zeros((n_steps, 3))
+    s[: n_steps * 2 // 3, 0] = 12.0  # only the first neuron is driven, for two thirds of the run
+    return s
+
+
+def test_toy_graph_runs_as_expected():
+    n = 3000
+    rec, volts = run_graph(TOY_NODES, TOY_EDGES, P.w_syn_mV, n, toy_schedule(n), watch=[2])
+    counts = rec.counts()
+    assert counts[0] > 5 and counts[1] > 0  # driver fires; its target fires because of it
+    assert counts[2] == 0  # inhibited neuron never fires
+    assert volts.shape == (n, 1) and volts.min() < P.v_rest_mV - 3
+    assert rec.first_spike_ms(0) < rec.first_spike_ms(1)  # cause comes before effect
+    assert rec.first_spike_ms(2) is None
+
+
+def test_no_input_means_no_spikes():
+    rec, _ = run_graph(TOY_NODES, TOY_EDGES, P.w_syn_mV, 500)
+    assert len(rec.steps) == 0 and rec.counts().tolist() == [0, 0, 0]
+
+
+def test_schedule_as_function_matches_array():
+    n = 1500
+    arr = toy_schedule(n)
+    a, _ = run_graph(TOY_NODES, TOY_EDGES, P.w_syn_mV, n, arr)
+    b, _ = run_graph(TOY_NODES, TOY_EDGES, P.w_syn_mV, n, lambda k: arr[k])
+    assert (a.steps, a.neurons) == (b.steps, b.neurons)
+
+
+def test_run_is_repeatable():
+    w = synaptic_matrix(TOY_NODES, [10], [20], [150], ["acetylcholine"], P.w_syn_mV)
+    net = LIFNetwork(w, P)
+    first, _ = run_network(net, 2000, toy_schedule(2000))
+    second, _ = run_network(net, 2000, toy_schedule(2000))  # run_network resets the state
+    assert first.steps == second.steps and first.neurons == second.neurons
+
+
+def test_spike_record_round_trip(tmp_path):
+    n = 2000
+    rec, _ = run_graph(TOY_NODES, TOY_EDGES, P.w_syn_mV, n, toy_schedule(n))
+    assert len(rec.steps) > 0
+    rec.save(tmp_path / "spikes.npz")
+    back = SpikeRecord.load(tmp_path / "spikes.npz")
+    assert back.steps == rec.steps and back.neurons == rec.neurons
+    assert back.dt_ms == rec.dt_ms and back.n_neurons == 3
+    assert np.allclose(back.times_ms, np.asarray(rec.steps) * P.dt_ms)

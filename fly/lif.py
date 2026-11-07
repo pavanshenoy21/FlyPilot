@@ -107,3 +107,91 @@ class LIFNetwork:
             self.pending[slot] += self.w[:, spikes].sum(axis=1)
         self.t_step += 1
         return spikes
+
+
+@dataclass
+class SpikeRecord:
+    """Every spike as (time in ms, neuron index). Saved and loaded without loss."""
+
+    dt_ms: float
+    n_neurons: int
+    steps: list[int]
+    neurons: list[int]
+
+    @classmethod
+    def empty(cls, n_neurons: int, dt_ms: float) -> SpikeRecord:
+        return cls(dt_ms=dt_ms, n_neurons=n_neurons, steps=[], neurons=[])
+
+    def add(self, step: int, spikes: np.ndarray) -> None:
+        idx = np.flatnonzero(spikes)
+        self.steps.extend([step] * len(idx))
+        self.neurons.extend(idx.tolist())
+
+    @property
+    def times_ms(self) -> np.ndarray:
+        return np.asarray(self.steps) * self.dt_ms
+
+    def counts(self) -> np.ndarray:
+        return np.bincount(self.neurons, minlength=self.n_neurons)
+
+    def first_spike_ms(self, neuron: int) -> float | None:
+        hits = [s for s, n in zip(self.steps, self.neurons, strict=True) if n == neuron]
+        return min(hits) * self.dt_ms if hits else None
+
+    def save(self, path: str | Path) -> None:
+        np.savez(
+            path,
+            dt_ms=self.dt_ms,
+            n_neurons=self.n_neurons,
+            steps=np.asarray(self.steps, dtype=np.int64),
+            neurons=np.asarray(self.neurons, dtype=np.int64),
+        )
+
+    @classmethod
+    def load(cls, path: str | Path) -> SpikeRecord:
+        d = np.load(path)
+        return cls(
+            dt_ms=float(d["dt_ms"]),
+            n_neurons=int(d["n_neurons"]),
+            steps=d["steps"].tolist(),
+            neurons=d["neurons"].tolist(),
+        )
+
+
+def run_network(net: LIFNetwork, n_steps: int, schedule=None, watch: list[int] | None = None):
+    """Run from a fresh state for n_steps. Returns (SpikeRecord, voltage trace of `watch` neurons).
+
+    schedule: None (no input), an array [n_steps, n_neurons] of i_ext in mV, or a function
+    step -> array [n_neurons] (or a scalar).
+    """
+    net.reset()
+    record = SpikeRecord.empty(net.n, net.p.dt_ms)
+    volts = np.zeros((n_steps, len(watch))) if watch else None
+    for k in range(n_steps):
+        i_ext = 0.0 if schedule is None else (schedule(k) if callable(schedule) else schedule[k])
+        record.add(k, net.step(i_ext))
+        if watch:
+            volts[k] = net.v[watch]
+    return record, volts
+
+
+def run_graph(
+    node_ids: list[int],
+    edges: dict,
+    scale_mV: float,
+    n_steps: int,
+    schedule=None,
+    params: LIFParams | None = None,
+    watch: list[int] | None = None,
+):
+    """Build a network from a graph and run it. edges has keys pre, post, syn_count, transmitter."""
+    params = params or load_params()
+    w = synaptic_matrix(
+        node_ids,
+        edges["pre"],
+        edges["post"],
+        edges["syn_count"],
+        edges["transmitter"],
+        scale_mV,
+    )
+    return run_network(LIFNetwork(w, params), n_steps, schedule, watch)
