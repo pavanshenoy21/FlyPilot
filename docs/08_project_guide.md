@@ -15,7 +15,7 @@ Bio-Insp EL/
 ├── progress_log.md               Dated record of what was done and what passed
 ├── decisions_log.md              Dated record of decisions, deviations and open questions
 ├── pyproject.toml, uv.lock       Python 3.12 environment with pinned versions (.venv/ is the environment itself)
-├── docs/                         Planning documents 01-09 (described in section 2)
+├── docs/                         Planning documents 01-10 (01-09 described in section 2; 10 is the Gate G1 report)
 ├── configs/                      prereg.yaml (draft evaluation values), data_version.yaml (pinned FlyWire data)
 ├── connectome/                   build_subgraph.py, analyze_subgraph.py, data/subgraph_v783/ (output), data/raw/ (downloads)
 ├── sim/                          env_check.py (simulator smoke test)

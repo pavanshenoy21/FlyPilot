@@ -59,6 +59,7 @@ Format: date · decision · reason · who decided.
 ## 2026-11-07
 
 14. **Open: how to handle the left/right asymmetry.** The right giant fiber gets 27% more synapses from our sources than the left (1,053 against 832). A single global scale would bias the "first giant fiber to fire" direction rule towards the right. Options: (a) accept it and measure the bias in Phase 6, (b) one scale per side, tuned so that a symmetric stimulus gives equal responses (adds one tuned number), (c) normalise each giant fiber's total input weight. Recommended: (a) first, then (b) only if the bias is large. Decide at Gate G1.
+    *New evidence (3C):* the right giant fiber gets more input from every kind of neuron (LC4 1.15x, LPLC2 1.36x, others 1.17x), so it is partly a giant-fiber property. Proposed rule written into `configs/prereg.yaml`: accept, measure on symmetric stimuli in Phase 6, and switch to one scale per giant fiber only if the right fires first on more than 60% or fewer than 40% of symmetric trials.
     *Status:* open. Touches locked decisions 3 and 5, so it needs Pavan's approval.
 
 15. **Open: keep weak connections?** Our table includes connections of 1–4 synapses; FlyWire's Codex tables drop connections under 5 synapses. Dropping them would remove 48% of the left giant fiber's source neurons and 23% of the right's. Recommended: keep everything (weights are proportional to synapse count, so weak connections contribute little anyway), and run the 5-synapse version later as a sensitivity check.
@@ -77,6 +78,9 @@ Format: date · decision · reason · who decided.
     *Why:* real connectome data, same data source as the wiring, and the probe shows it is stable and spread over the lobula.
     *Open:* the angular calibration (lobula position to visual-field angle) and a larger sample (about 15%) are still to do in Phase 5.4; fallback is even tiling with published receptive-field sizes.
     *Status:* proposed by Claude, pending Pavan at Gate G1.
+
+20. **Gate G1 report written** (`docs/10_gate_g1_report.md`). Recommended verdict: PASS, with decisions 13, 14, 15 and 19 to confirm. Gate G1 is not closed until Pavan answers.
+    *Status:* waiting for Pavan.
 
 ## Still open from earlier planning (see `06_open_items.md`)
 

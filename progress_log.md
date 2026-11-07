@@ -151,3 +151,20 @@ The input is spread across many neurons; no small group dominates (the strongest
 
 **Next**
 - 3C: Gate G1 write-up and decision.
+
+## 2026-11-07 — Phase 3, sub-stage 3C (Gate G1 report)
+
+**Done**
+- `connectome/asymmetry_check.py` (run as `.venv/bin/python -m connectome.asymmetry_check`) with 3 tests; writes `connectome/data/subgraph_v783/asymmetry.json`. Whole suite: 36 passed; ruff clean.
+- `docs/10_gate_g1_report.md`: the Gate G1 write-up (criteria against evidence, findings, decisions, draft limitations).
+- `configs/prereg.yaml`: proposed rule for the left/right asymmetry added (marked proposed).
+
+**New evidence on the left/right asymmetry** (decisions_log 14):
+- The right giant fiber gets more input from every kind of neuron: LC4 1.15x, LPLC2 1.36x, all other neurons 1.17x (right over left). So it is partly a property of the giant fiber, not only of LPLC2 / LC4.
+- Left source neurons have fewer total input synapses (median LC4 1,207 against 1,382; LPLC2 765 against 996), which could be tracing completeness or biology; the data cannot tell which.
+- The LPLC2 to giant-fiber gap (about 26%) is larger than LPLC2's overall output gap (about 8%).
+
+**Gate G1 verdict (recommended): PASS**, pending Pavan's answers to decisions 13, 14, 15 and 19 (and housekeeping item 18). Not yet tested: whether the circuit fires the giant fiber selectively for looming (Gate G2, Phase 6).
+
+**Next**
+- Phase 4 (LIF core), after Pavan confirms G1.

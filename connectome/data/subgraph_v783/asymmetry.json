@@ -1,0 +1,48 @@
+{
+  "gf_input_by_kind": [
+    {
+      "kind": "LC4",
+      "left": 374,
+      "right": 431,
+      "right_over_left": 1.15
+    },
+    {
+      "kind": "LPLC2",
+      "left": 458,
+      "right": 622,
+      "right_over_left": 1.36
+    },
+    {
+      "kind": "other",
+      "left": 3495,
+      "right": 4094,
+      "right_over_left": 1.17
+    }
+  ],
+  "source_median_totals": [
+    {
+      "cell_type": "LC4",
+      "side": "left",
+      "input_synapses": 1207,
+      "output_synapses": 326
+    },
+    {
+      "cell_type": "LC4",
+      "side": "right",
+      "input_synapses": 1382,
+      "output_synapses": 295
+    },
+    {
+      "cell_type": "LPLC2",
+      "side": "left",
+      "input_synapses": 765,
+      "output_synapses": 378
+    },
+    {
+      "cell_type": "LPLC2",
+      "side": "right",
+      "input_synapses": 996,
+      "output_synapses": 410
+    }
+  ]
+}
