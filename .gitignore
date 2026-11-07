@@ -1,13 +1,17 @@
-07_phased_implementation_plan.md 
-04_evaluation_protocol.md 
-06_open_items.md 
-05_pitch_and_report_plan.md 
-03_implementation_plan.md 
-01_project_overview.md 
-CLAUDE.md 
-Fly_Wired_AI_EL_Abstract_1.docx 
+# Planning documents kept out of Git (docs 08 and 09 are tracked)
+CLAUDE.md
+docs/01_project_overview.md
+docs/02_locked_decisions.md
+docs/03_implementation_plan.md
+docs/04_evaluation_protocol.md
+docs/05_pitch_and_report_plan.md
+docs/06_open_items.md
+docs/07_phased_implementation_plan.md
+Fly_Wired_AI_EL_Abstract_1.docx
 FlyPilot_EL_Phase1.pptx
-02_locked_decisions.md
-# Added in Phase 2B
+
+# Large downloaded FlyWire data (Phase 2B)
 connectome/data/raw/
+
+# Python bytecode
 __pycache__/

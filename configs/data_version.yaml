@@ -42,3 +42,12 @@ subgraph:
     known_nt from the annotation file when present (Davis et al. 2020 for all LPLC2 and LC4),
     otherwise top_nt. Per-connection probabilities in the connection table are stored but
     not used for signs (see decisions_log.md, entry 13).
+
+receptive_field_probe:       # Phase 3B, a small feasibility sample, not the final receptive-field data
+  script: connectome/probe_receptive_fields.py
+  source: flywire_synapses_783.feather (Zenodo record 10676866), read by HTTP range requests
+  sample: 40 of 1985 record batches (about 2%), random, seed 0
+  units: nanometres on all three axes in this table (annotation positions are 4 x 4 x 40 nm voxels)
+  kept_rows_file: connectome/data/raw/rf_probe_synapses.feather    # not tracked in Git
+  centroids_file: connectome/data/subgraph_v783/rf_probe_centroids.csv
+  centroids_sha256: 5ac6ddea147a3a77941602e749ab1a3dd700258848669ae0636c70faba2206ce

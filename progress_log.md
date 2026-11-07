@@ -119,3 +119,35 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Next**
 - 3B: can each neuron's receptive field (where in the visual field it looks) be recovered from the data?
 - 3C: Gate G1 write-up and decision.
+
+## 2026-11-07 — housekeeping after the move to `docs/`
+
+**Done**
+- Checked the new layout. Pavan moved documents 01-09 into `docs/` and committed Phase 3A; the planning documents 01-07, `CLAUDE.md`, the abstract and the original deck are kept out of Git on purpose.
+- Fixed paths and stale text: `.gitignore` (stale root entry and trailing spaces), `CLAUDE.md` (rewritten: new paths, commit-message rule, current state), `docs/03`, `docs/07`, `docs/08`, `configs/prereg.yaml`, both logs.
+- Found a compiled `.pyc` file tracked in Git (decisions_log 18); Pavan to remove it from tracking.
+
+**Next**
+- 3B: can each neuron's receptive field be recovered from the data? (done below)
+
+## 2026-11-07 — Phase 3, sub-stage 3B (receptive fields)
+
+**Question:** can each LPLC2 / LC4 neuron's receptive-field position (where in the visual field it looks) be recovered from the data? Their dendrites sit in the lobula (LO) and lobula plate (LOP), which are retinotopic layers, so the centre of a neuron's input synapses there is a proxy for where it looks.
+
+**Answer: yes, from synapse positions. Not from the annotation file.**
+- **Annotation positions are no use.** In `nodes.csv`, `pos` and `soma` points fall in a tight cluster (about 25 x 13 x 6 micrometres, with the usual 4 x 4 x 40 nm voxel assumption): the cell-body patch, not the dendrites. I first got a misleading "flat sheet" result by running the principal-component test in raw voxel units; redoing it in physical units removed it.
+- **The input synapses are in the right place.** From the connection table, each source neuron has a median of 1,003 input synapses (lower bound), about 90% of them in LO/LOP.
+- **The synapse table has what is needed** (`flywire_synapses_783.feather`, 9.49 GB, 1,985 batches of 65,536 rows, with a 3D position and a neuropil for every postsynaptic site), but it is **shuffled**: every sampled batch has the same neuropil mix and a wide spread of neuron ids. A single neuron's rows cannot be fetched, but any random subset of batches is an unbiased sample for every neuron.
+- **Method** (`connectome/probe_receptive_fields.py`, tested): read a random subset of batches with HTTP range requests, keep rows of our 293 source neurons in LO/LOP, take per-neuron centroids.
+- **Probe result** (random 40 of 1,985 batches, about 2%, 192 MB, 98 s): every one of the 293 neurons has lobula sites (median 10, 5th percentile 3). Two independent halves of the sample agree on a neuron's centre to a median of 5.2 um, while neuron centres differ by 20-38 um across the lobula (std in x and y), so the differences are 4-7 times the sampling error even at 2%. The plot (`notebooks/figures/receptive_field_probe.png`) shows each lobula filled by a patch of about 100 x 140 um, with the right lobula a mirror image of the left.
+
+**Mistake caught:** my first run assumed the synapse table is in 4 x 4 x 40 nm voxels, which gave impossible z spreads (570-760 um). Checked against the annotation positions: the table is in nanometres on all axes (about 4x in x, about 40-60x in z). Corrected in the code and tests; the earlier numbers are discarded.
+
+**Still to do (not a blocker for G1):**
+1. **Bigger sample.** At 2% only 129 of 293 neurons have at least 5 sites in each half. A 15% sample (about 300 batches, 1.5 GB, roughly 12 minutes at the 2 MB/s seen with 4 parallel readers) should give about 75 sites per neuron. Planned for Phase 5.4.
+2. **Angular calibration.** Centroids give each neuron's position in the lobula, not a visual-field angle. Turning one into the other needs the orientation of the retinotopic axes (which direction in the lobula is "up" or "forward"). Fallback if that proves too hard: tile the neurons evenly over the visual field, using published receptive-field sizes (needs citations).
+
+**Tests:** 6 new tests for the pure functions (the network reader is not unit-tested, since it needs the 9.5 GB remote file). Whole suite: 33 passed. `ruff check` and `ruff format --check` clean.
+
+**Next**
+- 3C: Gate G1 write-up and decision.

@@ -2,7 +2,7 @@
 
 This is the map of the project. It says what each file is for, what each planned folder will hold, what each scientific and engineering term means here, and how the parts connect. Status is marked for every item: **exists** (on disk now), **planned** (designed, not created) or **placeholder** (exists but is empty or temporary).
 
-Snapshot date: 3 Nov 2026 (pitch day).
+Snapshot date: 7 Nov 2026 (after Phase 3A). The numbered documents now live in `docs/`.
 
 ---
 
@@ -10,22 +10,26 @@ Snapshot date: 3 Nov 2026 (pitch day).
 
 ```
 Bio-Insp EL/
-├── .git/                          exists   Git repository (branch main, one commit)
-├── .gitignore                     exists   Lists files Git should NOT track (see section 6)
-├── CLAUDE.md                      exists   Entry point: read first in every new session
-├── 01_project_overview.md         exists   What the project is, the hypothesis, the demo
-├── 02_locked_decisions.md         exists   The 27 settled design decisions, with reasons
-├── 03_implementation_plan.md      exists   Architecture summary and repo layout (short)
-├── 04_evaluation_protocol.md      exists   Pre-registered metrics, match rule, controls
-├── 05_pitch_and_report_plan.md    exists   10-slide deck outline and report outline
-├── 06_open_items.md               exists   Unresolved facts, abstract-vs-plan differences
-├── 07_phased_implementation_plan.md exists  The 17-phase working plan with gates
-├── 08_project_guide.md            exists   This file
-├── Fly_Wired_AI_EL_Abstract_1.docx exists  Your abstract (source of the first references)
-└── FlyPilot_EL_Phase1.pptx        exists   The Phase I pitch deck (15 slides)
+├── .git/, .gitignore             Git repository (branch main) and its ignore list (see section 6)
+├── CLAUDE.md                     Entry point for every new session (kept out of Git)
+├── progress_log.md               Dated record of what was done and what passed
+├── decisions_log.md              Dated record of decisions, deviations and open questions
+├── pyproject.toml, uv.lock       Python 3.12 environment with pinned versions (.venv/ is the environment itself)
+├── docs/                         Planning documents 01-09 (described in section 2)
+├── configs/                      prereg.yaml (draft evaluation values), data_version.yaml (pinned FlyWire data)
+├── connectome/                   build_subgraph.py, analyze_subgraph.py, data/subgraph_v783/ (output), data/raw/ (downloads)
+├── sim/                          env_check.py (simulator smoke test)
+├── demo/                         pitch_figures.py (figures for the pitch)
+├── fly/, models/, eval/          READMEs only so far (code arrives in Phases 4-12)
+├── tests/                        test_environment.py, test_subgraph.py, test_analyze_subgraph.py
+├── notebooks/figures/            circuit_subgraph.png, looming_frames.png, subgraph_weights.png
+├── logs/                         env_check.txt
+├── Fly_Wired_AI_EL_Abstract_1.docx    Your abstract
+├── FlyPilot_EL_Phase1.pptx            The original pitch deck (15 slides)
+└── FlyPilot_EL_Phase1_v2.pptx         Deck with speaker notes and progress slides (18 slides)
 ```
 
-No code exists yet. Nothing has been run against FlyWire data or a simulator.
+Real FlyWire data has been downloaded and the looming subgraph built. No circuit has been simulated yet and nothing has been trained.
 
 ---
 
@@ -69,13 +73,15 @@ Your original write-up: problem, biology, proposed solution, evaluation plan, co
 Built from the RVCE EL Phase-I template: 15 slides covering the outline, introduction, literature review (a five-paper table plus a trends slide), problem, objectives, methodology (text plus a flowchart), outcomes, timeline, conclusion, references and thank-you. Picture slots are marked "[Insert picture]" for you to fill.
 
 ### .gitignore — what Git should not track
-Currently lists nine files: all the planning documents, the abstract and the deck. The last line (`02_locked_decisions.md`) has no line ending, which is probably why that one file was tracked anyway. See section 6.
+Excludes `CLAUDE.md`, documents 01-07 in `docs/`, the abstract and the original deck, plus the raw FlyWire downloads and `__pycache__/`. Documents 08 and 09, the v2 deck, the logs and all code are tracked. See section 6.
 
 ---
 
 ## 3. Planned folders and files (not yet created)
 
 These come from `03_implementation_plan.md`, `07` Phase 1 and the logs planned in `07`.
+
+**Status on 7 Nov:** `pyproject.toml`, `uv.lock`, all folders, both logs, `configs/prereg.yaml` (draft), `configs/data_version.yaml`, `connectome/build_subgraph.py` and `connectome/analyze_subgraph.py` now exist. Still planned: `fly/*.py`, `models/*.py`, `eval/*.py`, `connectome/shuffle.py`, `sim/episodes.py` and the other simulation and demo files, `configs/lif_params.yaml`.
 
 | Path | Created in | Will hold |
 |---|---|---|
@@ -175,10 +181,11 @@ Race demo with neuron overlay                 demo/race.py, overlay.py
 
 ## 6. Things you should know about the repository
 
-1. **Most documents are excluded from Git.** `.gitignore` lists nine files, including all the planning documents, the abstract and the deck. Only `02_locked_decisions.md` is tracked (the file lacks a line ending, so the last rule did not apply to it). If you want the documents shared or backed up through Git, the `.gitignore` needs changing. Do you want me to change it, or was the list intentional?
-2. **The repository was created by you**, with one commit ("Add implementation", 3 Nov). The Phase 1.2 question in `07` (git init or not) is therefore already answered: yes.
-3. **A stray empty folder** I created earlier at `Sem 3/EL/Bio_Insp_EL` is no longer on disk. Nothing is left to clean up.
-4. **The Git author** on the commit is `pavanshenoy21`, which is a different name from the one in the abstract. This matters only if commits are shared publicly.
+1. **Some documents are deliberately kept out of Git.** `.gitignore` excludes `CLAUDE.md`, documents 01-07 in `docs/`, the abstract and the original deck. Changes to those files do not show in `git status` and are not backed up by Git. Documents 08 and 09, the v2 deck, the logs and all code are tracked.
+2. **You make every commit.** After each finished sub-stage I give you a ready-to-paste commit message and say which files it covers, including any changed file that Git ignores.
+3. **A compiled file is tracked by mistake:** `tests/__pycache__/test_environment.cpython-312-pytest-9.2.0.pyc` was committed before `__pycache__/` was ignored. Fix: `git rm --cached -r tests/__pycache__`, then commit.
+4. **A stray empty folder** I created earlier at `Sem 3/EL/Bio_Insp_EL` is no longer on disk. Nothing is left to clean up.
+5. **The Git author** on the commit is `pavanshenoy21`, which is a different name from the one in the abstract. This matters only if commits are shared publicly.
 
 ---
 

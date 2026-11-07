@@ -11,8 +11,8 @@ Format: date · decision · reason · who decided.
 1. **Git repository exists.** Created by Pavan before Phase 1 began; one commit ("Add implementation"). This settles the Phase 1.2 question.
    *Decided by:* Pavan.
 
-2. **Open question: `.gitignore`.** It currently excludes nine files, including the planning documents, the abstract and the deck. Only `02_locked_decisions.md` is tracked. Not changed. Waiting for Pavan to say whether this is intended.
-   *Status:* open.
+2. **`.gitignore` question: resolved.** Pavan keeps the planning documents out of Git on purpose and updated the list himself after moving them to `docs/` (see entry 16).
+   *Status:* resolved 2026-11-07.
 
 3. **Folder layout accepted** as in `03_implementation_plan.md`, plus `logs/`. Each folder got a short README.
    *Decided by:* Pavan (confirmed at the end of 1A).
@@ -64,9 +64,21 @@ Format: date · decision · reason · who decided.
 15. **Open: keep weak connections?** Our table includes connections of 1–4 synapses; FlyWire's Codex tables drop connections under 5 synapses. Dropping them would remove 48% of the left giant fiber's source neurons and 23% of the right's. Recommended: keep everything (weights are proportional to synapse count, so weak connections contribute little anyway), and run the 5-synapse version later as a sensitivity check.
     *Status:* open. Decide at Gate G1.
 
-## Still open from earlier planning (see `06_open_items.md`)
+16. **Planning documents moved to `docs/`.** Done by Pavan, who also updated `.gitignore`. Claude then made path fixes only: removed the stale root entry `02_locked_decisions.md` and trailing spaces from `.gitignore` (same ignore behaviour), and updated `CLAUDE.md`, `docs/03`, `docs/07`, `docs/08` and `configs/prereg.yaml` to the new paths. Documents 01-07 stay out of Git; this closes entry 2.
+    *Decided by:* Pavan (layout and ignore list); path fixes by Claude.
 
-- **`.gitignore` question:** it still excludes the planning documents, the abstract and the deck. Waiting for Pavan.
+17. **Commit workflow.** Pavan makes every commit. After each finished sub-stage Claude gives a ready-to-paste commit message and lists the files it covers. Recorded in `CLAUDE.md` and `docs/07`.
+    *Decided by:* Pavan.
+
+18. **Open: a compiled `.pyc` file is tracked in Git** (`tests/__pycache__/test_environment.cpython-312-pytest-9.2.0.pyc`). It was committed before `__pycache__/` was ignored. Fix: `git rm --cached -r tests/__pycache__`, then commit.
+    *Status:* waiting for Pavan.
+
+19. **Receptive-field method (proposed, confirm at Gate G1):** take each neuron's receptive-field position from the centre of its input synapses in the lobula (and lobula plate), estimated from a random sample of batches of the FlyWire synapse table (details in `progress_log.md`, 3B). The annotation file's position columns are not used.
+    *Why:* real connectome data, same data source as the wiring, and the probe shows it is stable and spread over the lobula.
+    *Open:* the angular calibration (lobula position to visual-field angle) and a larger sample (about 15%) are still to do in Phase 5.4; fallback is even tiling with published receptive-field sizes.
+    *Status:* proposed by Claude, pending Pavan at Gate G1.
+
+## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).
 - Teammate roles on the slides (placeholders for now).

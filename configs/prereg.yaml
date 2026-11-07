@@ -4,7 +4,7 @@
 # After freezing, any change must be recorded in decisions_log.md as a deviation.
 #
 # Value markers:
-#   locked:  already settled in 02_locked_decisions.md / 04_evaluation_protocol.md (decision number given)
+#   locked:  already settled in docs/02_locked_decisions.md / docs/04_evaluation_protocol.md (decision number given)
 #   tbd:     not yet decided; must be filled before G4. Never guess a value to fill a tbd.
 
 meta:
@@ -35,7 +35,7 @@ fly:
   global_scale: null       # tbd: tuned once on the calibration set in Phase 6, then frozen
   lif_constants: null      # tbd: from published ranges, recorded in configs/lif_params.yaml (Phase 4)
   front_end: reichardt_fixed_no_learning                          # locked: decision 8
-  receptive_fields: tbd    # tbd: connectome positions if extractable, else even tiling (decided at Gate G1)
+  receptive_fields: tbd    # tbd (Gate G1). 3B: connectome positions are extractable (sampled lobula synapse centroids); angular calibration still to do
   direction_rule: first_giant_fiber_to_spike_gives_threat_side_dodge_opposite   # locked: decision 5
   trigger: first_giant_fiber_spike                                # locked: decision 21
   calibration_episodes: 30                                        # locked: decision 22, 23
