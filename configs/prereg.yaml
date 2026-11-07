@@ -36,7 +36,14 @@ fly:
   lif_constants: configs/lif_params.yaml   # Shiu et al. 2024 values, fixed, not tuned (decisions_log 21)
   front_end: reichardt_fixed_no_learning                          # locked: decision 8
   coarse_grid: {cells_per_side: 12, cell_deg: 5.0}                # Phase 5.2: ~ fly inter-ommatidial angle; citation to add
-  receptive_fields: sampled_lobula_synapse_centroids   # confirmed at G1 (decisions_log 19); fallback: even tiling. 3B: connectome positions are extractable (sampled lobula synapse centroids); angular calibration still to do
+  receptive_fields: sampled_lobula_synapse_centroids   # confirmed at G1 (decisions_log 19)
+  receptive_field_map:                                            # Phase 5.4, decisions_log 22
+    file: connectome/data/subgraph_v783/receptive_fields.csv
+    eyes_to_image_halves: left_eye_left_half_right_eye_right_half
+    vertical: dorsal_lobula_is_up                                 # checked from FlyWire coordinates
+    horizontal_main: anterior_lobula_is_frontal                   # ASSUMPTION (two optic chiasms)
+    horizontal_sensitivity_check: flipped                         # reported alongside, never swapped in after results
+    receptive_field_size: tbd                                     # Phase 6, from published LPLC2 / LC4 sizes 3B: connectome positions are extractable (sampled lobula synapse centroids); angular calibration still to do
   direction_rule: first_giant_fiber_to_spike_gives_threat_side_dodge_opposite   # locked: decision 5
   trigger: first_giant_fiber_spike                                # locked: decision 21
   left_right_asymmetry:                                           # decisions_log 14, approved at Gate G1 (2026-11-07)

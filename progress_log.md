@@ -239,3 +239,23 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Limits:** ON/OFF uses a plain frame difference (no adaptation); the detector only compares nearest neighbours (5 degrees apart), so very fast motion (more than one cell per frame, about 150 degrees/s) may alias. Feeding LC4 the same motion signal as LPLC2 is a declared simplification (locked decision 11).
 
 **Next:** 5.4 receptive-field mapping per LPLC2 / LC4 neuron (larger synapse sample and the angular calibration), then 5.5 front-end response plots.
+
+## 2026-11-07 — Phase 5, sub-stage 5.4 (receptive-field mapping)
+
+**Done**
+- **Larger synapse sample:** `connectome/probe_receptive_fields.py` got a `--tag` option so the new run does not overwrite the pinned G1 probe. Ran `--batches 300 --seed 0 --tag sample15`: 300 of 1,985 batches (about 15%), 1,435 MB in 563 s, 43,740 rows kept. Every one of the 293 source neurons covered; median 75 lobula sites per neuron (5th percentile 33, up from a median of 10); split-half agreement 2.1 um (was 5.2 um). Log in `logs/rf_sample15.txt`; hashes in `configs/data_version.yaml`.
+- **`fly/receptive_fields.py`:** per eye, projects lobula centroids onto their sheet (normal = least-spread direction; up = dorsal; back = posterior) and scales each axis (2nd to 98th percentile) to fill that eye's half of the 12 x 12 grid. Writes `connectome/data/subgraph_v783/receptive_fields.csv` (293 neurons: grid row and column, azimuth and elevation in degrees) and `notebooks/figures/receptive_fields.png`.
+- **Vertical orientation checked from the data:** the median annotation position of dorsal cell classes (endocrine, central) has small FlyWire y and the neck-end classes (motor, descending, ascending) large y, so y grows ventrally.
+- **Horizontal orientation is an assumption** (anterior lobula = frontal visual field, from the two optic chiasms each inverting the front-back axis). Flipped map pre-registered as a sensitivity check (decisions_log 22).
+- `tests/test_receptive_fields.py` (6 tests) on a synthetic sheet with known layout: axes orthonormal and correctly oriented; ventral maps down and posterior maps outward; each eye stays in and fills its half; left and right mirror; flip mirrors within the eye; angles consistent with grid positions.
+
+**Measured:**
+- The lobula centroids are a thin sheet (spread about 9 um across it against 22-36 um along it), and its long axis is close to the brain's dorsal-ventral axis.
+- Stability: between the 2% and 15% samples, a neuron's grid position moves by a median of 0.22 cells (about 1 degree; 90th percentile 0.45, max 0.84). Median distance to the nearest other neuron is 0.41 cells, so the fine order of close neighbours can change, but receptive fields will be several cells wide.
+- Tiling: LPLC2 and LC4 spread evenly over each half; means and spreads per cell type match across sides.
+
+**Checks:** whole suite 90 passed; ruff clean.
+
+**Limits:** horizontal orientation assumed (sensitivity check planned); each eye's ~160 degree field squeezed into 30 x 60 degrees; points beyond the 2nd/98th percentile are clipped to the grid edge; receptive-field size not yet chosen (Phase 6).
+
+**Next:** 5.5 front-end responses for the three stimulus types, saved and plotted.

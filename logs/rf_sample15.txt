@@ -1,0 +1,14 @@
+/home/pavvy/Documents/RVCE/Sem_3/EL/Bio-Insp EL/connectome/probe_receptive_fields.py:150: Pandas4Warning: The 'lsuffix' and 'rsuffix' keywords in DataFrame.join are deprecated and will be removed in a future version. Use the 'suffixes' keyword instead.
+  both = a.join(b, lsuffix="_a", rsuffix="_b", how="inner")
+read 300 of 1985 batches (1435 MB) in 563s; kept 43,740 rows
+
+neurons with at least one LO site: 293 of 293
+LO sites per neuron (sampled): median 75 | 5th percentile 33
+split-half check on 292 neurons with >=5 sites in each half:
+  median distance between the two centroid estimates: 2.1 um
+  LO centroids left  LC4   : spread across neurons (std of x,y,z) = 20.9, 35.9, 14.3 um  (n=54)
+  LO centroids left  LPLC2 : spread across neurons (std of x,y,z) = 19.5, 29.6, 15.8 um  (n=94)
+  LO centroids right LC4   : spread across neurons (std of x,y,z) = 20.4, 37.7, 16.9 um  (n=50)
+  LO centroids right LPLC2 : spread across neurons (std of x,y,z) = 18.3, 31.0, 19.1 um  (n=95)
+wrote notebooks/figures/receptive_field_sample15.png
+exit 0

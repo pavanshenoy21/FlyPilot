@@ -231,7 +231,17 @@ def main() -> None:
     p.add_argument(
         "--reuse", action="store_true", help="reuse the saved sample instead of fetching"
     )
+    p.add_argument(
+        "--tag",
+        default="",
+        help="name the outputs rf_<tag>_* instead of rf_probe_* (keeps the pinned G1 probe intact)",
+    )
     a = p.parse_args()
+    if a.tag:
+        global RAW_OUT, CSV_OUT, FIG_OUT
+        RAW_OUT = RAW_OUT.with_name(f"rf_{a.tag}_synapses.feather")
+        CSV_OUT = CSV_OUT.with_name(f"rf_{a.tag}_centroids.csv")
+        FIG_OUT = FIG_OUT.with_name(f"receptive_field_{a.tag}.png")
     run(a.batches, a.seed, reuse=a.reuse)
 
 

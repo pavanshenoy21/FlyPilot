@@ -85,6 +85,9 @@ Format: date · decision · reason · who decided.
 21. **LIF constants come from Shiu et al. 2024 (whole-brain fly LIF model), checked against the authors' code** (`philshiu/Drosophila_brain_model`, `model.py`): rest and reset -52 mV, threshold -45 mV, membrane tau 20 ms, synaptic tau 5 ms, refractory 2.2 ms, delay 1.8 ms, weight 0.275 mV per synapse (their only free parameter). Used as fixed published values, not tuned. The weight per synapse is the placeholder for our one global scale, which Phase 6 tunes.
     *Decided by:* Claude, from published values; Pavan can veto.
 
+22. **Receptive-field map (Phase 5.4).** Each eye's lobula centroids (15% synapse sample) are projected onto their sheet and scaled to fill its half of the 12 x 12 grid (left eye -> left half, right eye -> right half). Vertical: dorsal lobula = up, checked from the data (FlyWire y grows ventrally). Horizontal: anterior lobula = frontal (image centre), posterior = outer edge. **This horizontal orientation is an assumption** (the two optic chiasms each invert the front-back axis; the final direction in FlyWire coordinates is not verified). The flipped map is pre-registered as a sensitivity check, reported alongside, never swapped in after results. Declared simplification: each eye's ~160 degree map is squeezed into a 30 x 60 degree half-image. Receptive-field size is left to Phase 6.
+    *Decided by:* Claude (method within decision 19); Pavan can veto.
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).

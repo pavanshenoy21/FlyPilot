@@ -51,3 +51,15 @@ receptive_field_probe:       # Phase 3B, a small feasibility sample, not the fin
   kept_rows_file: connectome/data/raw/rf_probe_synapses.feather    # not tracked in Git
   centroids_file: connectome/data/subgraph_v783/rf_probe_centroids.csv
   centroids_sha256: 5ac6ddea147a3a77941602e749ab1a3dd700258848669ae0636c70faba2206ce
+
+receptive_field_sample:      # Phase 5.4, the sample the receptive-field map is built from
+  script: connectome/probe_receptive_fields.py --batches 300 --seed 0 --tag sample15
+  sample: 300 of 1985 record batches (about 15%), random, seed 0; 1,435 MB read; 43,740 rows kept
+  coverage: 293 of 293 source neurons; median 75 lobula sites per neuron (5th percentile 33)
+  split_half_median_um: 2.1
+  kept_rows_file: connectome/data/raw/rf_sample15_synapses.feather   # not tracked in Git
+  centroids_file: connectome/data/subgraph_v783/rf_sample15_centroids.csv
+  centroids_sha256: ed82e809aeda19523131e2d02930db6fa5356f3cf684f3c582303db1d9fcc27d
+  map_script: fly/receptive_fields.py
+  map_file: connectome/data/subgraph_v783/receptive_fields.csv
+  map_sha256: 64ee52cce08122a91f17e99b1744a999b61dc5f47deb27660a42b8fcf8006b64
