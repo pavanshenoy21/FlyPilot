@@ -223,3 +223,19 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Declared simplification:** the pinhole image is not equal-angle per pixel (about 25% stretch at 30 degrees from the centre); the 12 x 12 cells are treated as equal.
 
 **Next:** 5.3 Reichardt-style ON/OFF motion detector on the grid, tested on a bar moving in known directions.
+
+## 2026-11-07 — Phase 5, sub-stage 5.3 (Reichardt motion detector)
+
+**Done**
+- `fly/frontend.py`: `on_off` (frame-to-frame change split into ON = brightening and OFF = darkening, like T4 / T5), `low_pass` (first-order delay filter), `reichardt(grid)` -> `[T, 2 polarities, 4 directions (right, left, down, up), 12, 12]`. Correlator per neighbouring cell pair: delayed(a) x b - a x delayed(b), separately in ON and OFF; positive and negative halves give the two opposite directions. No learned parameters.
+- One chosen constant: delay filter tau = 50 ms (about 1.5 frames at 30 fps). **Chosen, not fitted and not cited**; recorded as such in the code.
+- `sim/stimuli.py`: `moving_bar(direction, speed, width, dark)` test pattern.
+- `tests/test_frontend.py`: now 22 tests. New: a dark and a bright bar moving in each of the 4 directions gives its largest energy in the correct direction in both ON and OFF (16 cases); static image gives exactly zero; full-field flicker gives zero; ON/OFF split; low-pass step response; a centred looming dot gives outward motion in all four halves; **control:** the same bar with its frames shuffled in time gives no clear direction (right/left ratio 1.11 ON, 0.94 OFF).
+
+**Measured (not just asserted):** bars give energy only in their true direction (opposite direction exactly 0 for a single bar). Looming dot: rightward >> leftward on the right half and the reverse on the left half.
+
+**Checks:** whole suite 84 passed; ruff clean.
+
+**Limits:** ON/OFF uses a plain frame difference (no adaptation); the detector only compares nearest neighbours (5 degrees apart), so very fast motion (more than one cell per frame, about 150 degrees/s) may alias. Feeding LC4 the same motion signal as LPLC2 is a declared simplification (locked decision 11).
+
+**Next:** 5.4 receptive-field mapping per LPLC2 / LC4 neuron (larger synapse sample and the angular calibration), then 5.5 front-end response plots.

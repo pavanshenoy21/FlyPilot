@@ -121,6 +121,26 @@ def make_receding(
     return _make("receding", pos, radius_m, t, np.full_like(t, np.nan), p)
 
 
+def moving_bar(
+    direction: str, speed_deg_s: float = 60.0, width_deg: float = 10.0, dark: bool = True
+) -> np.ndarray:
+    """A full-length bar crossing the view (test pattern for the motion detector, Phase 5.3).
+    direction: right, left, down or up. Returns frames [T, SIZE, SIZE], 1.5 s at 30 fps."""
+    px_per_deg = SIZE / FOV_DEG
+    t = _times(1.5)
+    width = width_deg * px_per_deg
+    lead = -width + speed_deg_s * px_per_deg * t  # position of the bar's far edge, in pixels
+    coord = np.arange(SIZE) + 0.5
+    frames = np.empty((len(t), SIZE, SIZE), dtype=np.float32)
+    fg, bg = (OBJECT, BACKGROUND) if dark else (BACKGROUND, OBJECT)
+    for k, x in enumerate(lead):
+        along = coord if direction in ("right", "down") else SIZE - coord
+        cover = np.clip(np.minimum(x + width - along + 0.5, along - x + 0.5), 0, 1)
+        line = bg + (fg - bg) * cover
+        frames[k] = line[None, :] if direction in ("right", "left") else line[:, None]
+    return frames
+
+
 def make_stimulus(kind: str, seed: int) -> Stimulus:
     """A random stimulus of the given kind; the same seed always gives the same stimulus."""
     if kind not in KINDS:
