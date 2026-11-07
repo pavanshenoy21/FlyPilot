@@ -33,7 +33,17 @@ fly:
     glutamate: inhibitory
     other: drop_and_report
   synapse_weight_mV: 0.275  # fixed, published (Shiu et al. 2024); decisions_log 25 amends locked decision 3
-  input_gain: null         # THE ONE TUNED NUMBER: tbd, tuned once on the calibration set (6.3), then frozen
+  input_gain: 5.623413251903491   # THE ONE TUNED NUMBER. FROZEN 2026-11-07 (Phase 6.4, confirmed by Pavan)
+  input_gain_frozen:
+    from: logs/calibration_result.json
+    calibration_result_sha256: 86c7669ffe9eb0c14ee703788e94017f931ac5c6e93f395ac02b55aeeaf8fb3c
+    code_sha256_at_freeze:
+      fly/circuit.py: b0f6eb464f52658466af5ba2b9d15ff16a5eababe21d49688b3494c611ad29ba
+      fly/frontend.py: 44449894f0353da9d148f8b4c19939506e3586cb677cb801954ff425defb814f
+      fly/lif.py: 14384340c0720c48a3bf39017524924442ebb6111bdbaf16dfb2e61160bfc61f
+      configs/lif_params.yaml: 10ddb349d832922b31fa59c82bf586e54f18968ee3bef1013ea8915eeca2ecbb
+      receptive_fields.csv: 64ee52cce08122a91f17e99b1744a999b61dc5f47deb27660a42b8fcf8006b64
+    simulator_recalibration: same rule, 30 simulator episodes, Phase 8 (decisions_log 26, approved)
   receptive_field_radius_cells: 2.0                               # decisions_log 24, fixed
   lplc2_drive: mean_outward_minus_inward_in_rf_rectified          # decisions_log 24
   lc4_drive: mean_outward_in_rf_rectified                         # decisions_log 24 (locked decision 11 simplification)
@@ -59,6 +69,15 @@ fly:
     stimuli: sim/stimuli.py make_stimulus(kind, seed)
     seeds: {looming: [1000, 1009], passing: [1000, 1009], receding: [1000, 1009]}   # inclusive ranges, 30 stimuli
     held_out_seeds: {looming: [2000, 2049], passing: [2000, 2049], receding: [2000, 2049]}   # 6.5 only, never for tuning
+    held_out_scoring:                                             # written before the held-out run
+      side_scored_only_if_abs_x_m_at_least: 0.02                  # closer to centre counts as head-on: either side correct
+      report: [hit_rate, false_alarm_rate_passing, false_alarm_rate_receding, ttc_at_trigger_distribution, side_accuracy]
+      intervals: wilson_95
+      g2_pass_if: hit_rate_lower_95_at_least_0.8_and_false_alarm_rate_upper_95_at_most_0.2
+    symmetry_check:                                               # decisions_log 14, written before running
+      stimuli: make_looming with x_m = 0 exactly; radius, speed, impact time and y_m drawn as make_stimulus does
+      seeds: [3000, 3039]
+      rule: if the right giant fiber fires first on more than 60% or fewer than 40% of triggered trials, switch to one input gain per side (logged deviation)
     excluded_seeds: [0, 1, 2, 3, 4, 100, 101, 102, 103]           # already looked at (5.5 figure, decisions_log 25)
     gain_grid: geomspace(1, 100, 25)
     rule: >

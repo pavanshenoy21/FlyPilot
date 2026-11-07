@@ -97,6 +97,9 @@ Format: date · decision · reason · who decided.
 25. **The one tuned number is the input gain, not the synapse scale (amends locked decision 3).** Evidence (4 stimuli per kind, seeds 100-103): with the input gain fixed by a reference-edge rule and the synapse scale tuned (the locked plan), LPLC2/LC4 fired only ~5 spikes per loom, the giant fiber missed 1 of 4 looms at scales 5 and 20 mV per synapse, and one input spike could trigger it, so the wiring would barely matter. With the synapse weight fixed at the published 0.275 mV (Shiu et al. 2024) and the input gain varied, the giant fiber fired on 4/4 looms and 0/8 passing or receding at gains 3, 10 and 30, driven by hundreds of source spikes, with TTC at trigger 0.09-0.43 s. Still exactly one tuned number. Decided before any calibration or evaluation run. These 12 exploratory stimuli (seeds 100-103) must not be reused for calibration or testing.
     *Decided by:* Pavan ("okay go ahead", 2026-11-07), on Claude's recommendation.
 
+26. **Input gain frozen at 5.6234 (Phase 6.4)** with hashes of the calibration result and the code in `configs/prereg.yaml`. **Re-calibration on simulator episodes:** in Phase 8, the gain is re-tuned once on 30 simulator episodes with the same pre-registered rule; that becomes the evaluation gain. Gate G2 thresholds and head-on scoring written into prereg before the held-out run (pass: hit rate lower 95% bound >= 0.8 and false-alarm rate upper 95% bound <= 0.2; side scored only when |x| >= 0.02 m).
+    *Decided by:* Pavan ("yes freeze ... yess", 2026-11-07); G2 thresholds proposed by Claude, written before the run.
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).

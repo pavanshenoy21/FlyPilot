@@ -312,3 +312,30 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Checks:** whole suite 105 passed; ruff clean.
 
 **Next:** 6.4 freeze the gain (Pavan confirms), then 6.5 held-out check and Gate G2.
+
+## 2026-11-07 — Phase 6, sub-stages 6.4 and 6.5; Gate G2
+
+**6.4 Freeze:** input gain frozen at 5.623413251903491 (Pavan confirmed). Hashes of `logs/calibration_result.json` and of the circuit code, front end, LIF code, LIF constants and receptive-field map written into `configs/prereg.yaml` (`fly.input_gain_frozen`). Pavan also approved re-calibrating once on 30 simulator episodes with the same rule in Phase 8 (decisions_log 26).
+
+**Before the held-out run**, written into prereg: head-on scoring (side scored only when |x| >= 0.02 m), Wilson 95% intervals, the G2 pass rule (hit-rate lower bound >= 0.8 and false-alarm upper bound <= 0.2; proposed by Claude), and the symmetry check (40 looms with x = 0 exactly, seeds 3000-3039).
+
+**6.5 Held-out run:** `fly/heldout.py` (150 held-out stimuli, seeds 2000-2049 per kind, checked disjoint from calibration and excluded seeds; 43 s). Outputs `logs/heldout_runs.csv`, `logs/symmetry_runs.csv`, `logs/gate_g2_result.json`, `notebooks/figures/heldout_results.png`. `tests/test_heldout.py` (3 tests).
+
+| Held-out result | Value | 95% interval |
+|---|---|---|
+| Looming that trigger | 50 / 50 | 0.93-1.00 |
+| Passing that trigger | 0 / 50 | 0.00-0.07 |
+| Receding that trigger | 0 / 50 | 0.00-0.07 |
+| All non-looming | 0 / 100 | 0.00-0.04 |
+| TTC at trigger | median 185 ms (10th-90th percentile 129-232, range 91-259) | |
+| Correct side (off-centre by >= 2 cm) | 45 / 46 | 0.89-1.00 |
+
+**Gate G2 (by the pre-registered rule): PASS.** Caveat: these are synthetic stimuli (one dark sphere, plain background), much easier than simulator episodes.
+
+**Symmetry check (decisions_log 14): the switch rule fired.** On 40 exactly centred looms, all triggered; the right giant fiber fired first on 15 (37.5%; Wilson 95% interval 24-53%, which includes 50%). The pre-registered rule (switch to per-side gains if outside 40-60%) uses the point estimate, so it fires.
+- Direction of the bias is the opposite of the G1 worry: the **left** fires first more often, although the right giant fiber has 27% more input synapses. Reason found: the left eye's neurons get more total drive (5,737 against 4,826 on seed 3000; median source spikes 617 left against 496 right; left eye has 148 sources against 145, and their receptive-field placement differs).
+- The gap is small in time: median 5.1 ms between the two giant fibers; 10 of 40 trials within 2 ms.
+- Practical effect is small: off-centre objects get the correct side 45/46, and head-on objects count as correct either way.
+- **Not yet acted on.** Applying the rule adds a second tuned number; waiting for Pavan.
+
+**Checks:** whole suite 108 passed; ruff clean.

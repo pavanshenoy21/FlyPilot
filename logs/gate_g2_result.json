@@ -1,0 +1,63 @@
+{
+  "hit_rate": {
+    "k": 50,
+    "n": 50,
+    "rate": 1.0,
+    "wilson95": [
+      0.9286499658256813,
+      1.0
+    ]
+  },
+  "false_alarm_passing": {
+    "k": 0,
+    "n": 50,
+    "rate": 0.0,
+    "wilson95": [
+      0.0,
+      0.07135003417431873
+    ]
+  },
+  "false_alarm_receding": {
+    "k": 0,
+    "n": 50,
+    "rate": 0.0,
+    "wilson95": [
+      0.0,
+      0.07135003417431873
+    ]
+  },
+  "false_alarm_all": {
+    "k": 0,
+    "n": 100,
+    "rate": 0.0,
+    "wilson95": [
+      0.0,
+      0.03699480747600191
+    ]
+  },
+  "ttc_at_trigger_ms": {
+    "median": 185.1235363082644,
+    "p10": 129.02521957468855,
+    "p90": 231.7448349505794,
+    "min": 91.39959739721837,
+    "max": 259.14186003328734
+  },
+  "side_accuracy": {
+    "k": 45,
+    "n": 46,
+    "rate": 0.9782608695652174,
+    "wilson95": [
+      0.8866444550566697,
+      0.9961522448887572
+    ]
+  },
+  "head_on_not_scored": 4,
+  "symmetry": {
+    "n": 40,
+    "triggered": 40,
+    "right_first_share": 0.375,
+    "switch_rule_triggered": true
+  },
+  "gate_g2_pass": true,
+  "input_gain": 5.623413251903491
+}
