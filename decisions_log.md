@@ -88,6 +88,9 @@ Format: date · decision · reason · who decided.
 22. **Receptive-field map (Phase 5.4).** Each eye's lobula centroids (15% synapse sample) are projected onto their sheet and scaled to fill its half of the 12 x 12 grid (left eye -> left half, right eye -> right half). Vertical: dorsal lobula = up, checked from the data (FlyWire y grows ventrally). Horizontal: anterior lobula = frontal (image centre), posterior = outer edge. **This horizontal orientation is an assumption** (the two optic chiasms each invert the front-back axis; the final direction in FlyWire coordinates is not verified). The flipped map is pre-registered as a sensitivity check, reported alongside, never swapped in after results. Declared simplification: each eye's ~160 degree map is squeezed into a 30 x 60 degree half-image. Receptive-field size is left to Phase 6.
     *Decided by:* Claude (method within decision 19); Pavan can veto.
 
+23. **Synthetic looming stimuli are on a true collision course.** In 5.5 some random looming stimuli had a sideways offset larger than the sphere's radius (near misses, not collisions). Fix: the offset is drawn inside a disc of 0.8 x the radius. Synthetic stimuli are front-end test material only; the evaluation episodes come from the simulator generator.
+    *Decided by:* Claude (bug fix).
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).

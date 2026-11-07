@@ -86,3 +86,10 @@ def test_random_stimuli_stay_inside_the_ranges():
 def test_unknown_kind_is_rejected():
     with pytest.raises(ValueError):
         st.make_stimulus("sideways", 0)
+
+
+def test_random_looming_objects_are_on_a_collision_course():
+    # the sideways offset must be smaller than the radius, or the sphere would miss the camera
+    for seed in range(50):
+        p = st.make_stimulus("looming", seed).params
+        assert np.hypot(p["x_m"], p["y_m"]) <= st.COLLISION_OFFSET_FRACTION * p["radius_m"] + 1e-12

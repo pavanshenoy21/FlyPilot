@@ -30,11 +30,16 @@ BACKGROUND, OBJECT = 0.85, 0.10  # grey levels, 0 = black
 KINDS = ("looming", "passing", "receding")
 
 # Ranges a random stimulus is drawn from (metres, seconds, metres per second).
+# A random looming object is always on a collision course: its sideways offset lies inside a disc
+# of COLLISION_OFFSET_FRACTION x its radius, so the sphere really hits the camera. (Before 5.5 the
+# offset could exceed the radius, which made some "looming" stimuli near misses.)
+COLLISION_OFFSET_FRACTION = 0.8
+
 RANGES = {
     "radius_m": (0.10, 0.40),
     "speed_mps": (1.5, 4.0),
     "duration_s": (1.5, 3.0),
-    "offset_m": (-0.30, 0.30),  # sideways offset of a looming or receding object, per axis
+    "offset_m": (-0.30, 0.30),  # sideways offset of a passing or receding object, per axis
     "pass_distance_m": (1.5, 4.0),
     "receding_start_m": (0.8, 2.0),
 }
@@ -148,7 +153,9 @@ def make_stimulus(kind: str, seed: int) -> Stimulus:
     rng = np.random.default_rng(seed)
     u = {k: rng.uniform(*v) for k, v in RANGES.items()}
     if kind == "looming":
-        x, y = rng.uniform(*RANGES["offset_m"], size=2)
+        r = COLLISION_OFFSET_FRACTION * u["radius_m"] * np.sqrt(rng.uniform())
+        angle = rng.uniform(0, 2 * np.pi)
+        x, y = r * np.cos(angle), r * np.sin(angle)
         return make_looming(u["radius_m"], u["speed_mps"], u["duration_s"], x, y)
     if kind == "passing":
         direction = int(rng.choice([-1, 1]))

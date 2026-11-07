@@ -259,3 +259,23 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Limits:** horizontal orientation assumed (sensitivity check planned); each eye's ~160 degree field squeezed into 30 x 60 degrees; points beyond the 2nd/98th percentile are clipped to the grid edge; receptive-field size not yet chosen (Phase 6).
 
 **Next:** 5.5 front-end responses for the three stimulus types, saved and plotted.
+
+## 2026-11-07 — Phase 5, sub-stage 5.5 (front-end responses); Phase 5 complete
+
+**Done**
+- `fly/frontend_report.py`: runs 5 random stimuli of each kind through coarse grid -> Reichardt, saves per-frame `total` motion energy and an `expansion` index (outward minus inward motion relative to the image centre; a preview only, LPLC2's own radial computation is wired in Phase 6) to `logs/frontend_responses.csv`, and draws `notebooks/figures/frontend_responses.png` (grid frames with net-motion arrows at one fixed scale, plus expansion over time).
+- `tests/test_frontend_report.py` (2 tests): sign of the expansion index on hand-made motion; every looming stimulus peaks more than 10x higher than any passing or receding one. `tests/test_stimuli.py`: new test that random looming objects are on a collision course.
+
+**Bug found and fixed:** random "looming" stimuli could have a sideways offset bigger than the sphere's radius, so the sphere missed the camera and drifted out of view (seeds 2 and 3 peaked weakly for that reason). Now the offset is drawn inside a disc of 0.8 x radius (`COLLISION_OFFSET_FRACTION`). Recorded in decisions_log 23.
+
+**Measured (5 seeds per kind):**
+- Peak expansion: looming 1.8 to 3.8; passing at most 0.055; receding at most 0.000 (its minimum is slightly negative, as expected for inward motion).
+- **Expansion only appears late:** it first exceeds 0.05 at TTC 0.28 to 0.43 s, when the object is about 10-15 degrees wide (2-3 grid cells). Before that the object is smaller than a few 5-degree cells and its growth is invisible to the grid.
+
+**Why this matters (risk to the hypothesis, to discuss at Gate G2):** a CNN that sees the full 128 x 128 frames can in principle notice growth earlier than a 12 x 12 grid. The fly's coarse eye is real biology, and the fly's escape is also late (it relies on speed, not early warning), but for our "early warning" metric the grid resolution may cap the fly circuit's TTC at trigger. This is a property of locked decision 8 (coarse fly-like grid), not something to tune away. Report it either way.
+
+**Checks:** whole suite 93 passed; ruff clean.
+
+**Phase 5 acceptance:** motion detector gives the correct direction on known test patterns (5.3); the front end has no learned parameters. Met.
+
+**Next:** Phase 6, circuit assembly and calibration: front end -> LPLC2 / LC4 inputs (receptive-field size to choose from published values) -> left and right giant fibers; tune the one global scale on the calibration set; then Gate G2 (is the giant fiber selective for looming?).
