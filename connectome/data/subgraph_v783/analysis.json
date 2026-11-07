@@ -1,0 +1,120 @@
+{
+  "weight_stats": [
+    {
+      "post_side": "left",
+      "pre_type": "LC4",
+      "neurons": 54,
+      "synapses": 374,
+      "mean": 6.93,
+      "median": 7.0,
+      "min": 1,
+      "max": 14,
+      "top10pct_share": 0.209
+    },
+    {
+      "post_side": "left",
+      "pre_type": "LPLC2",
+      "neurons": 94,
+      "synapses": 458,
+      "mean": 4.87,
+      "median": 4.0,
+      "min": 1,
+      "max": 15,
+      "top10pct_share": 0.269
+    },
+    {
+      "post_side": "right",
+      "pre_type": "LC4",
+      "neurons": 50,
+      "synapses": 431,
+      "mean": 8.62,
+      "median": 8.0,
+      "min": 3,
+      "max": 16,
+      "top10pct_share": 0.172
+    },
+    {
+      "post_side": "right",
+      "pre_type": "LPLC2",
+      "neurons": 95,
+      "synapses": 622,
+      "mean": 6.55,
+      "median": 7.0,
+      "min": 1,
+      "max": 16,
+      "top10pct_share": 0.217
+    }
+  ],
+  "threshold_effect": [
+    {
+      "post_side": "left",
+      "min_synapses": 1,
+      "neurons_kept": 148,
+      "neurons_kept_pct": 100.0,
+      "synapses_kept_pct": 100.0
+    },
+    {
+      "post_side": "left",
+      "min_synapses": 2,
+      "neurons_kept": 139,
+      "neurons_kept_pct": 93.9,
+      "synapses_kept_pct": 98.9
+    },
+    {
+      "post_side": "left",
+      "min_synapses": 3,
+      "neurons_kept": 122,
+      "neurons_kept_pct": 82.4,
+      "synapses_kept_pct": 94.8
+    },
+    {
+      "post_side": "left",
+      "min_synapses": 5,
+      "neurons_kept": 77,
+      "neurons_kept_pct": 52.0,
+      "synapses_kept_pct": 76.2
+    },
+    {
+      "post_side": "left",
+      "min_synapses": 10,
+      "neurons_kept": 20,
+      "neurons_kept_pct": 13.5,
+      "synapses_kept_pct": 29.3
+    },
+    {
+      "post_side": "right",
+      "min_synapses": 1,
+      "neurons_kept": 145,
+      "neurons_kept_pct": 100.0,
+      "synapses_kept_pct": 100.0
+    },
+    {
+      "post_side": "right",
+      "min_synapses": 2,
+      "neurons_kept": 136,
+      "neurons_kept_pct": 93.8,
+      "synapses_kept_pct": 99.1
+    },
+    {
+      "post_side": "right",
+      "min_synapses": 3,
+      "neurons_kept": 128,
+      "neurons_kept_pct": 88.3,
+      "synapses_kept_pct": 97.6
+    },
+    {
+      "post_side": "right",
+      "min_synapses": 5,
+      "neurons_kept": 111,
+      "neurons_kept_pct": 76.6,
+      "synapses_kept_pct": 91.8
+    },
+    {
+      "post_side": "right",
+      "min_synapses": 10,
+      "neurons_kept": 36,
+      "neurons_kept_pct": 24.8,
+      "synapses_kept_pct": 41.3
+    }
+  ]
+}

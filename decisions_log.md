@@ -56,6 +56,14 @@ Format: date · decision · reason · who decided.
     *Decided by:* Claude, **pending Pavan's review**. It affects every connection weight sign, so it is worth a second look.
     *To report:* as a limitation.
 
+## 2026-11-07
+
+14. **Open: how to handle the left/right asymmetry.** The right giant fiber gets 27% more synapses from our sources than the left (1,053 against 832). A single global scale would bias the "first giant fiber to fire" direction rule towards the right. Options: (a) accept it and measure the bias in Phase 6, (b) one scale per side, tuned so that a symmetric stimulus gives equal responses (adds one tuned number), (c) normalise each giant fiber's total input weight. Recommended: (a) first, then (b) only if the bias is large. Decide at Gate G1.
+    *Status:* open. Touches locked decisions 3 and 5, so it needs Pavan's approval.
+
+15. **Open: keep weak connections?** Our table includes connections of 1–4 synapses; FlyWire's Codex tables drop connections under 5 synapses. Dropping them would remove 48% of the left giant fiber's source neurons and 23% of the right's. Recommended: keep everything (weights are proportional to synapse count, so weak connections contribute little anyway), and run the 5-synapse version later as a sensitivity check.
+    *Status:* open. Decide at Gate G1.
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - **`.gitignore` question:** it still excludes the planning documents, the abstract and the deck. Waiting for Pavan.

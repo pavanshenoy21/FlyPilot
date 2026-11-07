@@ -96,5 +96,26 @@ Dated record of what was done each session. Newest entry last. Every claim here 
 
 **Not verified:** whether the experimental evidence (TAPIN-seq) reflects the transmitter used at the giant-fiber synapses specifically. I'm trusting the annotation file's `known_nt` and its stated source; I have not read the Davis et al. paper.
 
+## 2026-11-07 — Phase 3, sub-stage 3A (connection strength)
+
+**Done**
+- `connectome/analyze_subgraph.py` with tests (`tests/test_analyze_subgraph.py`). Whole suite: 27 passed, ruff clean. Writes `connectome/data/subgraph_v783/analysis.json` and `notebooks/figures/subgraph_weights.png`.
+
+**Synapses per source neuron** (one connection = one neuron pair):
+
+| Giant fiber | Source | Neurons | Synapses | Mean | Median | Range | Top 10% of neurons hold |
+|---|---|---|---|---|---|---|---|
+| left | LC4 | 54 | 374 | 6.9 | 7 | 1–14 | 21% |
+| left | LPLC2 | 94 | 458 | 4.9 | 4 | 1–15 | 27% |
+| right | LC4 | 50 | 431 | 8.6 | 8 | 3–16 | 17% |
+| right | LPLC2 | 95 | 622 | 6.6 | 7 | 1–16 | 22% |
+
+The input is spread across many neurons; no small group dominates (the strongest 10% of neurons hold only 17–27% of the synapses). This suits a population circuit.
+
+**Finding 1 — a left/right asymmetry.** The right giant fiber receives 1,053 synapses from our sources, the left only 832 (27% more on the right). Connections are also stronger on the right (mean 6.6 and 8.6 synapses against 4.9 and 6.9). With one global scale, a perfectly symmetric looming stimulus would drive the right giant fiber harder, so it would tend to fire first. Our dodge-direction rule (decision 5: the first giant fiber to fire gives the threat side) would then be biased towards one side. The shuffle control keeps degrees, so it keeps this asymmetry too. **Needs a decision before Phase 6 (open item, see decisions_log 14).**
+
+**Finding 2 — weak connections.** FlyWire's own Codex tables leave out weak connections; ours (the Zenodo table) includes everything. If connections under 5 synapses were dropped, the left giant fiber would keep only 77 of 148 source neurons (52%, and 76% of synapses); the right would keep 111 of 145 (77%, and 92% of synapses). That would also deepen the left/right asymmetry. **Needs a decision (open item, see decisions_log 15).**
+
 **Next**
-- Phase 2 is complete when you've reviewed 2A–2C. Then Phase 3 (subgraph analysis and Gate G1): the remaining analysis is receptive-field extraction, a subgraph figure, and the G1 write-up.
+- 3B: can each neuron's receptive field (where in the visual field it looks) be recovered from the data?
+- 3C: Gate G1 write-up and decision.
