@@ -1,0 +1,14 @@
+{
+  "chosen_input_gain": 5.623413251903491,
+  "rule": "middle of the longest run of grid gains with max (hits - false alarms)",
+  "at_chosen": {
+    "hits": 10.0,
+    "n_looming": 10.0,
+    "false_alarms": 0.0,
+    "n_other": 20.0,
+    "median_ttc_s": 0.13703149853082497,
+    "side_correct": 0.9,
+    "score": 10.0
+  },
+  "n_stimuli": 30
+}

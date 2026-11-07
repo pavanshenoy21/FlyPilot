@@ -293,3 +293,22 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Checks:** whole suite 101 passed; ruff clean. One stimulus takes about 1 s to simulate.
 
 **Next:** 6.2 calibration set (about 30 stimuli, separate seeds written into prereg) and 6.3 tuning the input gain with a calibration curve.
+
+## 2026-11-07 — Phase 6, sub-stages 6.2 and 6.3 (calibration set and tuning the input gain)
+
+**Done**
+- **6.2:** written into `configs/prereg.yaml` (`fly.synthetic_calibration`) **before any calibration run**: calibration seeds 1000-1009 for each kind (30 stimuli), held-out seeds 2000-2049 per kind (6.5 only), excluded seeds (0-4, 100-103: already looked at), gain grid `geomspace(1, 100, 25)`, and the choice rule (middle of the longest run of gains with the best hits minus false alarms).
+- **6.3:** `fly/calibrate.py` ran all 25 gains on the 30 stimuli (750 runs, 2 min 18 s on 12 processes). Outputs: `logs/calibration_runs.csv` (sha256 5815d9a5...), `logs/calibration_result.json`, `notebooks/figures/calibration_curve.png`.
+- `tests/test_calibrate.py` (4 tests): rule picks the middle of the best plateau, prefers the longest run, settings match prereg and avoid excluded seeds, summary counts hits and false alarms.
+
+**Result:** chosen input gain **5.6234** (grid gains 2.15 to 14.68 all score 10/10 hits, 0/20 false alarms; the rule takes the middle).
+- At the chosen gain: 10/10 looms trigger; 0/10 passing, 0/10 receding; TTC at trigger 89-226 ms (median 137 ms).
+- Side: 9/10 correct. The one "wrong" side is seed 1000, whose object is 3 mm off-centre (effectively head-on, which the protocol scores as correct for either side).
+- Above gain 14.7 false alarms start (passing seeds 1000, 1001, 1002, 1006 and receding seed 1000 at the highest gains). Below 2.15 looms are missed.
+- Trade-off visible in the curve: higher gain gives earlier warning (median 200 ms at 14.7) at the cost of being nearer the false-alarm edge. The pre-registered rule is deliberately in the middle; it is applied as written.
+
+**Open (not decided here):** this calibration uses the synthetic stimuli. The project's fly budget is 30 calibration *episodes* from the simulator generator (Phase 8). Whether the gain is re-calibrated on simulator episodes then (same rule, same 30-episode budget) needs Pavan's decision before evaluation.
+
+**Checks:** whole suite 105 passed; ruff clean.
+
+**Next:** 6.4 freeze the gain (Pavan confirms), then 6.5 held-out check and Gate G2.

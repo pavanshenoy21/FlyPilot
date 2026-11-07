@@ -55,6 +55,17 @@ fly:
     switch_to_per_giant_fiber_scale_if_right_fires_first_share_outside: [0.40, 0.60]
     note: on symmetric looming stimuli; if triggered, tune one scale per giant fiber so the split is 50/50
   calibration_episodes: 30                                        # locked: decision 22, 23
+  synthetic_calibration:                                          # Phase 6.2-6.3, written BEFORE any calibration run
+    stimuli: sim/stimuli.py make_stimulus(kind, seed)
+    seeds: {looming: [1000, 1009], passing: [1000, 1009], receding: [1000, 1009]}   # inclusive ranges, 30 stimuli
+    held_out_seeds: {looming: [2000, 2049], passing: [2000, 2049], receding: [2000, 2049]}   # 6.5 only, never for tuning
+    excluded_seeds: [0, 1, 2, 3, 4, 100, 101, 102, 103]           # already looked at (5.5 figure, decisions_log 25)
+    gain_grid: geomspace(1, 100, 25)
+    rule: >
+      score = looming stimuli that trigger minus passing/receding stimuli that trigger (calibration
+      set only). Take all gains with the maximum score; choose the one at the geometric middle of
+      that run of gains (rounded to the nearest grid value), which keeps away from both the
+      missed-loom edge and the false-alarm edge. Trigger side and TTC are reported, not used.
 
 shuffle:                   # locked: decision 12
   method: degree_preserving_rewire   # keeps in/out degree, signs, total synapse count
