@@ -35,6 +35,7 @@ fly:
   global_scale: null       # tbd: tuned once on the calibration set in Phase 6, then frozen
   lif_constants: configs/lif_params.yaml   # Shiu et al. 2024 values, fixed, not tuned (decisions_log 21)
   front_end: reichardt_fixed_no_learning                          # locked: decision 8
+  coarse_grid: {cells_per_side: 12, cell_deg: 5.0}                # Phase 5.2: ~ fly inter-ommatidial angle; citation to add
   receptive_fields: sampled_lobula_synapse_centroids   # confirmed at G1 (decisions_log 19); fallback: even tiling. 3B: connectome positions are extractable (sampled lobula synapse centroids); angular calibration still to do
   direction_rule: first_giant_fiber_to_spike_gives_threat_side_dodge_opposite   # locked: decision 5
   trigger: first_giant_fiber_spike                                # locked: decision 21

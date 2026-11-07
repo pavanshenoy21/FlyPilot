@@ -210,3 +210,16 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Not yet decided:** how fast the real episodes' objects move relative to these ranges (the ranges are placeholders for the front-end work, not the evaluation set; the evaluation episodes come from the simulator generator in a later phase). Dark object on a bright background only; polarity variants are a robustness question for later.
 
 **Next:** 5.2 coarse grid downsampler, then 5.3 Reichardt motion detector.
+
+## 2026-11-07 — Phase 5, sub-stage 5.2 (coarse grid downsampler)
+
+**Done**
+- `fly/frontend.py`: `coarse_grid(frames, n=12)` area-averages [..., 128, 128] frames to [..., 12, 12] with an exact weighted averaging matrix (partial pixels weighted by overlap, so 128 to 12 works although 128 is not divisible by 12). Fixed linear map, no parameters.
+- Grid choice: 12 x 12 cells of 5 degrees over the 60 degree field of view, about a fly's inter-ommatidial angle (4.5-5 degrees). **The 5 degree figure is from memory; a citation must be added before the report.** Written into `configs/prereg.yaml` as `fly.coarse_grid`.
+- `tests/test_frontend.py` (8 tests): shapes for a frame and a stack; matrix rows sum to 1; mean intensity preserved; constant image stays constant; equals a plain block average when sizes divide (128 to 16); a dark corner lands in the right cell; a growing looming dot darkens more of the grid; linear (no learned parameters).
+
+**Checks:** whole suite 70 passed; ruff clean.
+
+**Declared simplification:** the pinhole image is not equal-angle per pixel (about 25% stretch at 30 degrees from the centre); the 12 x 12 cells are treated as equal.
+
+**Next:** 5.3 Reichardt-style ON/OFF motion detector on the grid, tested on a bar moving in known directions.
