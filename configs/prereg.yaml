@@ -32,7 +32,11 @@ fly:
     GABA: inhibitory
     glutamate: inhibitory
     other: drop_and_report
-  global_scale: null       # tbd: tuned once on the calibration set in Phase 6, then frozen
+  synapse_weight_mV: 0.275  # fixed, published (Shiu et al. 2024); decisions_log 25 amends locked decision 3
+  input_gain: null         # THE ONE TUNED NUMBER: tbd, tuned once on the calibration set (6.3), then frozen
+  receptive_field_radius_cells: 2.0                               # decisions_log 24, fixed
+  lplc2_drive: mean_outward_minus_inward_in_rf_rectified          # decisions_log 24
+  lc4_drive: mean_outward_in_rf_rectified                         # decisions_log 24 (locked decision 11 simplification)
   lif_constants: configs/lif_params.yaml   # Shiu et al. 2024 values, fixed, not tuned (decisions_log 21)
   front_end: reichardt_fixed_no_learning                          # locked: decision 8
   coarse_grid: {cells_per_side: 12, cell_deg: 5.0}                # Phase 5.2: ~ fly inter-ommatidial angle; citation to add

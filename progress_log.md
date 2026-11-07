@@ -279,3 +279,17 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Phase 5 acceptance:** motion detector gives the correct direction on known test patterns (5.3); the front end has no learned parameters. Met.
 
 **Next:** Phase 6, circuit assembly and calibration: front end -> LPLC2 / LC4 inputs (receptive-field size to choose from published values) -> left and right giant fibers; tune the one global scale on the calibration set; then Gate G2 (is the giant fiber selective for looming?).
+
+## 2026-11-07 — Phase 6, sub-stage 6.1 (circuit assembly)
+
+**Done**
+- `fly/circuit.py`: `load_circuit` (295 nodes from the subgraph, receptive-field kernels, signed synapse-count matrix, optional pre-registered horizontal flip), `source_drive` (motion inside each receptive field -> input in mV), `run(circuit, frames, input_gain)` -> spike record, trigger time (first giant-fiber spike), threat side, spike counts. Synapse weight fixed at 0.275 mV per synapse; the one tuned number is `input_gain` (decisions_log 25, approved by Pavan). Fixed assembly choices in decisions_log 24.
+- `notebooks/figures/circuit_raster.png`: spike raster for one looming stimulus (object 0.16 m left of centre): left-eye LPLC2 and LC4 fire first, the left giant fiber triggers 179 ms before impact, so the drone would dodge right. Gain 10 is a placeholder, not calibrated.
+- `tests/test_circuit.py` (8 tests): neuron counts; weights (1,885 synapses, all excitatory, 0.275 mV); LPLC2 kernel outward minus inward, LC4 outward only; no motion gives no spikes; a looming object on the left triggers the left giant fiber before impact, on the right the right one; a passing object does not trigger at the same gain; horizontal flip keeps each eye in its half.
+- **Bug caught by a test and fixed:** the flip used the column to decide which eye a neuron belongs to, so a left-eye neuron exactly on the centre line went to the far right edge. Now it uses the neuron's side.
+
+**Exploration that led to decisions_log 25** (seeds 100-103, now excluded from calibration and testing): see that entry.
+
+**Checks:** whole suite 101 passed; ruff clean. One stimulus takes about 1 s to simulate.
+
+**Next:** 6.2 calibration set (about 30 stimuli, separate seeds written into prereg) and 6.3 tuning the input gain with a calibration curve.
