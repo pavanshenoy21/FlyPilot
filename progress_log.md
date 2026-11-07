@@ -197,3 +197,16 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Phase 4 acceptance:** all tests pass; no parameter tuned against looming data. Met. The runner handles the 295-node subgraph only as a dense matrix (295 x 295), which is fine at this size.
 
 **Next:** Phase 5, stimuli and the Reichardt front end. 5.1 first: synthetic looming, passing and receding dots with exact time-to-collision.
+
+## 2026-11-07 — Phase 5, sub-stage 5.1 (synthetic stimuli)
+
+**Done**
+- `sim/stimuli.py`: analytic dark-sphere stimuli seen by a pinhole camera with the simulator's settings (60 degree field of view, 128 x 128, 30 fps). `make_looming`, `make_passing`, `make_receding`, and `make_stimulus(kind, seed)` (random draw from the documented `RANGES`, same seed gives the same stimulus). Each `Stimulus` carries frames, times, exact TTC per frame (nan unless looming), disc radius and centre in pixels. Impact is defined as the sphere's nearest surface reaching the camera plane, so TTC = (z - radius) / speed. The outline is drawn as a disc of radius f R / sqrt(z^2 - R^2), anti-aliased (exact on the optical axis, a small approximation off-axis).
+- `tests/test_stimuli.py` (12 tests): TTC counts down exactly one frame at a time and ends within one frame of impact; apparent size follows the geometry; the classic estimate radius / (d radius / dt) agrees with the true TTC to 8% early in a loom; rendered area matches the disc to 3%; passing keeps constant size, has no TTC and crosses the view; receding shrinks; seeds are reproducible; ranges respected; unknown kind rejected.
+- `notebooks/figures/synthetic_stimuli.png`: contact sheet of the three kinds (checked by eye).
+
+**Checks:** whole suite 62 passed; ruff clean.
+
+**Not yet decided:** how fast the real episodes' objects move relative to these ranges (the ranges are placeholders for the front-end work, not the evaluation set; the evaluation episodes come from the simulator generator in a later phase). Dark object on a bright background only; polarity variants are a robustness question for later.
+
+**Next:** 5.2 coarse grid downsampler, then 5.3 Reichardt motion detector.
