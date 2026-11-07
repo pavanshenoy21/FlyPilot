@@ -81,7 +81,7 @@ Excludes `CLAUDE.md`, documents 01-07 in `docs/`, the abstract and the original 
 
 These come from `03_implementation_plan.md`, `07` Phase 1 and the logs planned in `07`.
 
-**Status on 7 Nov:** `pyproject.toml`, `uv.lock`, all folders, both logs, `configs/prereg.yaml` (draft), `configs/data_version.yaml`, `connectome/build_subgraph.py` and `connectome/analyze_subgraph.py` now exist. Still planned: `fly/*.py`, `models/*.py`, `eval/*.py`, `connectome/shuffle.py`, `sim/episodes.py` and the other simulation and demo files, `configs/lif_params.yaml`.
+**Status on 7 Nov:** `pyproject.toml`, `uv.lock`, all folders, both logs, `configs/prereg.yaml` (draft), `configs/data_version.yaml`, `connectome/build_subgraph.py` and `connectome/analyze_subgraph.py`, `fly/lif.py` and `configs/lif_params.yaml` now exist. Still planned: `fly/*.py`, `models/*.py`, `eval/*.py`, `connectome/shuffle.py`, `sim/episodes.py` and the other simulation and demo files.
 
 | Path | Created in | Will hold |
 |---|---|---|

@@ -60,10 +60,10 @@ Format: date · decision · reason · who decided.
 
 14. **Open: how to handle the left/right asymmetry.** The right giant fiber gets 27% more synapses from our sources than the left (1,053 against 832). A single global scale would bias the "first giant fiber to fire" direction rule towards the right. Options: (a) accept it and measure the bias in Phase 6, (b) one scale per side, tuned so that a symmetric stimulus gives equal responses (adds one tuned number), (c) normalise each giant fiber's total input weight. Recommended: (a) first, then (b) only if the bias is large. Decide at Gate G1.
     *New evidence (3C):* the right giant fiber gets more input from every kind of neuron (LC4 1.15x, LPLC2 1.36x, others 1.17x), so it is partly a giant-fiber property. Proposed rule written into `configs/prereg.yaml`: accept, measure on symmetric stimuli in Phase 6, and switch to one scale per giant fiber only if the right fires first on more than 60% or fewer than 40% of symmetric trials.
-    *Status:* open. Touches locked decisions 3 and 5, so it needs Pavan's approval.
+    *Status:* **approved by Pavan ("proceed", 2026-11-07) as recommended** (accept, measure in Phase 6, switch rule in prereg.yaml).
 
 15. **Open: keep weak connections?** Our table includes connections of 1–4 synapses; FlyWire's Codex tables drop connections under 5 synapses. Dropping them would remove 48% of the left giant fiber's source neurons and 23% of the right's. Recommended: keep everything (weights are proportional to synapse count, so weak connections contribute little anyway), and run the 5-synapse version later as a sensitivity check.
-    *Status:* open. Decide at Gate G1.
+    *Status:* **approved as recommended** (keep everything; 5-synapse sensitivity run later).
 
 16. **Planning documents moved to `docs/`.** Done by Pavan, who also updated `.gitignore`. Claude then made path fixes only: removed the stale root entry `02_locked_decisions.md` and trailing spaces from `.gitignore` (same ignore behaviour), and updated `CLAUDE.md`, `docs/03`, `docs/07`, `docs/08` and `configs/prereg.yaml` to the new paths. Documents 01-07 stay out of Git; this closes entry 2.
     *Decided by:* Pavan (layout and ignore list); path fixes by Claude.
@@ -72,15 +72,18 @@ Format: date · decision · reason · who decided.
     *Decided by:* Pavan.
 
 18. **Open: a compiled `.pyc` file is tracked in Git** (`tests/__pycache__/test_environment.cpython-312-pytest-9.2.0.pyc`). It was committed before `__pycache__/` was ignored. Fix: `git rm --cached -r tests/__pycache__`, then commit.
-    *Status:* waiting for Pavan.
+    *Status:* still to run by Pavan: `git rm --cached -r tests/__pycache__`.
 
 19. **Receptive-field method (proposed, confirm at Gate G1):** take each neuron's receptive-field position from the centre of its input synapses in the lobula (and lobula plate), estimated from a random sample of batches of the FlyWire synapse table (details in `progress_log.md`, 3B). The annotation file's position columns are not used.
     *Why:* real connectome data, same data source as the wiring, and the probe shows it is stable and spread over the lobula.
     *Open:* the angular calibration (lobula position to visual-field angle) and a larger sample (about 15%) are still to do in Phase 5.4; fallback is even tiling with published receptive-field sizes.
-    *Status:* proposed by Claude, pending Pavan at Gate G1.
+    *Status:* **confirmed** ("proceed", 2026-11-07).
 
 20. **Gate G1 report written** (`docs/10_gate_g1_report.md`). Recommended verdict: PASS, with decisions 13, 14, 15 and 19 to confirm. Gate G1 is not closed until Pavan answers.
-    *Status:* waiting for Pavan.
+    *Status:* **Gate G1 closed: PASS** on Pavan's "proceed" (2026-11-07), taken as approval of 13, 14, 15 and 19 as recommended.
+
+21. **LIF constants come from Shiu et al. 2024 (whole-brain fly LIF model), checked against the authors' code** (`philshiu/Drosophila_brain_model`, `model.py`): rest and reset -52 mV, threshold -45 mV, membrane tau 20 ms, synaptic tau 5 ms, refractory 2.2 ms, delay 1.8 ms, weight 0.275 mV per synapse (their only free parameter). Used as fixed published values, not tuned. The weight per synapse is the placeholder for our one global scale, which Phase 6 tunes.
+    *Decided by:* Claude, from published values; Pavan can veto.
 
 ## Still open from earlier planning (see `06_open_items.md`)
 

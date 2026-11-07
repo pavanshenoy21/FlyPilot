@@ -33,12 +33,12 @@ fly:
     glutamate: inhibitory
     other: drop_and_report
   global_scale: null       # tbd: tuned once on the calibration set in Phase 6, then frozen
-  lif_constants: null      # tbd: from published ranges, recorded in configs/lif_params.yaml (Phase 4)
+  lif_constants: configs/lif_params.yaml   # Shiu et al. 2024 values, fixed, not tuned (decisions_log 21)
   front_end: reichardt_fixed_no_learning                          # locked: decision 8
-  receptive_fields: tbd    # tbd (Gate G1). 3B: connectome positions are extractable (sampled lobula synapse centroids); angular calibration still to do
+  receptive_fields: sampled_lobula_synapse_centroids   # confirmed at G1 (decisions_log 19); fallback: even tiling. 3B: connectome positions are extractable (sampled lobula synapse centroids); angular calibration still to do
   direction_rule: first_giant_fiber_to_spike_gives_threat_side_dodge_opposite   # locked: decision 5
   trigger: first_giant_fiber_spike                                # locked: decision 21
-  left_right_asymmetry:                                           # decisions_log 14, PROPOSED (pending Pavan at G1)
+  left_right_asymmetry:                                           # decisions_log 14, approved at Gate G1 (2026-11-07)
     rule: accept_then_measure_on_symmetric_stimuli
     switch_to_per_giant_fiber_scale_if_right_fires_first_share_outside: [0.40, 0.60]
     note: on symmetric looming stimuli; if triggered, tune one scale per giant fiber so the split is 50/50

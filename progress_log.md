@@ -168,3 +168,19 @@ The input is spread across many neurons; no small group dominates (the strongest
 
 **Next**
 - Phase 4 (LIF core), after Pavan confirms G1.
+
+## 2026-11-07 — Gate G1 closed; Phase 4, sub-stage 4A (LIF neuron and synapse)
+
+**Gate G1:** Pavan said "proceed", taken as approval of the report's recommendations: verdict PASS, decisions 13, 14, 15 and 19 as recommended (`decisions_log.md` updated). Still for Pavan: `git rm --cached -r tests/__pycache__` (18).
+
+**Done (4.1, 4.2, 4.5)**
+- `configs/lif_params.yaml`: fixed constants with sources. Values taken from Shiu et al. 2024 and checked against the authors' code (`philshiu/Drosophila_brain_model`, `model.py`): rest/reset -52 mV, threshold -45 mV, membrane tau 20 ms, synaptic tau 5 ms, refractory 2.2 ms, delay 1.8 ms, 0.275 mV per synapse. The last is a placeholder for our one global scale (tuned in Phase 6). Nothing tuned.
+- `fly/lif.py`: `LIFParams`/`load_params`, `transmitter_sign`, `synaptic_matrix` (weight = sign x synapse count x scale), `LIFNetwork.step` (Euler, dt 0.1 ms, refractory period, synaptic delay as a ring buffer). Generic: no fly code in it.
+- `tests/test_lif.py` (9 tests): constants match the source; constant drive of 10 mV fires at the analytic rate within 5%; drive below threshold never fires; no inter-spike gap under 2.2 ms; sign follows the transmitter (unknown transmitter raises); weight doubles with count; excitatory input depolarises and inhibitory input hyperpolarises the target; input arrives exactly 18 steps (1.8 ms) after the spike; reset restores the state.
+- `configs/prereg.yaml`: `lif_constants` and `receptive_fields` filled in; asymmetry rule marked approved.
+
+**Checks:** whole suite 45 passed; `ruff check` and `ruff format` clean.
+
+**Limits to remember:** `i_ext` (direct input in mV) is our addition for tests and the stimulus drive. The synaptic current is a single exponential decay, as in the source code, not a true alpha function.
+
+**Next:** 4B: spike recording (4.3) and the network runner with an input schedule (4.4), tested on a toy 3-neuron graph.
