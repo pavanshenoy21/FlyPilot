@@ -1,0 +1,102 @@
+{
+  "n_shuffles": 20,
+  "wiring_seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "runtime_s": 6315.89262509346,
+  "tuned": {
+    "median_ttc_at_trigger_ms": {
+      "real": 189.13361363152936,
+      "shuffled_mean": 174.3294535372693,
+      "shuffled_sd": 6.477290147140444,
+      "shuffled_min": 165.84188711123284,
+      "shuffled_max": 189.28546504071807,
+      "real_beats_share": 0.95,
+      "p_one_sided": 0.09523809523809523
+    },
+    "side_accuracy": {
+      "real": 0.9782608695652174,
+      "shuffled_mean": 0.47065217391304354,
+      "shuffled_sd": 0.15807061640032027,
+      "shuffled_min": 0.15217391304347827,
+      "shuffled_max": 0.7608695652173914,
+      "real_beats_share": 1.0,
+      "p_one_sided": 0.047619047619047616
+    },
+    "hit_rate": {
+      "real": 1.0,
+      "shuffled_mean": 1.0,
+      "shuffled_sd": 0.0,
+      "shuffled_min": 1.0,
+      "shuffled_max": 1.0,
+      "real_beats_share": 0.5,
+      "p_one_sided": 1.0
+    },
+    "false_alarm_rate": {
+      "real": 0.0,
+      "shuffled_mean": 0.0,
+      "shuffled_sd": 0.0,
+      "shuffled_min": 0.0,
+      "shuffled_max": 0.0,
+      "real_beats_share": 0.5,
+      "p_one_sided": 1.0
+    }
+  },
+  "real_frozen": {
+    "median_ttc_at_trigger_ms": {
+      "real": 189.13361363152936,
+      "shuffled_mean": 171.39698771874725,
+      "shuffled_sd": 2.0112179430943864,
+      "shuffled_min": 167.231875968055,
+      "shuffled_max": 174.78020102471982,
+      "real_beats_share": 1.0,
+      "p_one_sided": 0.047619047619047616
+    },
+    "side_accuracy": {
+      "real": 0.9782608695652174,
+      "shuffled_mean": 0.4815217391304348,
+      "shuffled_sd": 0.16484889050529214,
+      "shuffled_min": 0.15217391304347827,
+      "shuffled_max": 0.8043478260869565,
+      "real_beats_share": 1.0,
+      "p_one_sided": 0.047619047619047616
+    },
+    "hit_rate": {
+      "real": 1.0,
+      "shuffled_mean": 1.0,
+      "shuffled_sd": 0.0,
+      "shuffled_min": 1.0,
+      "shuffled_max": 1.0,
+      "real_beats_share": 0.5,
+      "p_one_sided": 1.0
+    },
+    "false_alarm_rate": {
+      "real": 0.0,
+      "shuffled_mean": 0.0,
+      "shuffled_sd": 0.0,
+      "shuffled_min": 0.0,
+      "shuffled_max": 0.0,
+      "real_beats_share": 0.5,
+      "p_one_sided": 1.0
+    }
+  }
+}

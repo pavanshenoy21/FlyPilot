@@ -373,3 +373,32 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Checks:** whole suite 136 passed; ruff clean.
 
 **Next:** 7.2, running the 20 shuffles. One decision first: do the shuffles reuse the real circuit's frozen gains, or each go through the same calibration procedure?
+
+## 2026-11-09 — Phase 7, sub-stage 7.2 (20 shuffled circuits, same tuning procedure)
+
+**Decision:** each shuffle gets the real circuit's tuning procedure (decisions_log 29). Procedure, metrics, ranking and the expected outcome written into `configs/prereg.yaml` (shuffle.synthetic_check) before any shuffled circuit was run.
+
+**Done**
+- `fly/shuffle_eval.py`: per shuffle, gain calibration (same seeds, grid, rule), symmetry check, per-side split where the check fires, held-out set; plus every shuffle at the real circuit's frozen gains. `compare()` ranks the real circuit (ties count half) with a one-sided permutation p-value.
+- `tests/test_shuffle_eval.py` (4 tests). Smoke test on wiring seed 99 (outside the set).
+- Outputs: `logs/shuffle_calibration_runs.csv`, `logs/shuffle_heldout_runs.csv`, `logs/shuffle_per_seed.csv`, `logs/shuffle_result.json` (sha in prereg), `logs/shuffle_eval_stdout.txt`.
+- Runtime 1 h 45 min for 33,240 circuit runs (about 2.3 s per run per worker with 12 in parallel, double the single-run time). A first attempt was killed when the session closed and saved nothing; the rerun was started detached.
+
+**Results (held-out synthetic set; real circuit vs 20 shuffles, each shuffle tuned by the same procedure)**
+
+| Metric | Real | Shuffles mean ± SD (min-max) | Real beats | p (one-sided) |
+|---|---|---|---|---|
+| Correct dodge side (off-centre looms) | 97.8% (45/46) | 47.1% ± 15.8 (15-76%) | 100% | 0.048 |
+| Median warning before impact | 189 ms | 174 ± 6 ms (166-189) | 95% | 0.095 |
+| Looms caught | 100% | 100% for all | tie | 1.0 |
+| False alarms | 0% | 0% for all | tie | 1.0 |
+
+- Secondary (shuffles at the real circuit's frozen gains): side 48% ± 16 (real beats 100%, p = 0.048); warning 171 ± 2 ms (167-175; real beats 100%, p = 0.048).
+- 20 shuffles is the smallest p possible = 1/21 = 0.048. More shuffles would allow a smaller p.
+- As expected beforehand, the wiring matters most for the dodge side: the shuffles are at chance. Unexpected: the real wiring also warns about 15 ms earlier on average. One shuffle (seed 7) matched it at 189 ms after tuning, so the timing result does not reach p < 0.05 in the main analysis.
+- Gains chosen: 15 shuffles got the same gain as the real circuit (5.62), 5 got 6.81. The symmetry rule fired for 13 of 20 (the real circuit's also fired).
+- Caveat: synthetic stimuli only; detection is at ceiling for every circuit, so only side and timing can separate them here.
+
+**Checks:** shuffle tests 29 passed; ruff clean.
+
+**Next:** 7.3, histogram figure of the shuffled results with the real circuit marked.

@@ -102,6 +102,30 @@ shuffle:                   # locked: decision 12
   method: degree_preserving_rewire   # keeps in/out degree, signs, total synapse count
   seeds_min: 20
   report: mean_and_spread_plus_real_circuit_rank
+  implementation: fly/shuffle.py   # decisions_log 28: edge targets permuted, synapse count + transmitter stay with each edge
+  wiring_seeds: [0, 19]            # inclusive; own namespace, separate from stimulus seeds
+  synthetic_check:                 # Phase 7.2, written 2026-11-09 BEFORE any shuffled circuit was run (decisions_log 29)
+    tuning: >
+      each shuffle goes through the real circuit's procedure, same seeds and grids:
+      (1) input gain by fly.synthetic_calibration.rule on the calibration seeds and gain_grid;
+      (2) symmetry check on seeds 3000-3039 at that gain; only if right-first share is outside 0.4-0.6,
+      per-side split by fly.synthetic_calibration.per_side_gain (a_grid, tuning seeds 4000-4039, same rule);
+      (3) held-out set (seeds 2000-2049 per kind) and symmetry seeds at the final gains.
+    secondary: every shuffle also run on the held-out set at the real circuit's frozen gains (left 5.4778, right 5.7729)
+    real_circuit_values_from: logs/side_gain_result.json (recheck_heldout)
+    metrics:                       # held-out set, scored as fly.synthetic_calibration.held_out_scoring
+      - median_ttc_at_trigger_ms   # early warning, higher is better
+      - side_accuracy              # off-centre looms only (|x| >= 0.02 m)
+      - hit_rate
+      - false_alarm_rate           # lower is better
+    per_metric_report: real value; shuffled mean, SD, min, max; share of shuffles the real circuit beats (ties count half)
+    p_value: one-sided permutation style, (1 + shuffles at least as good as real) / (1 + n_shuffles)
+    expectation_stated_before_running: >
+      the real circuit is wired 100% same-side and shuffles about 50%, so side accuracy should drop
+      in the shuffles; trigger timing may change little. Synthetic stimuli only; the main comparison
+      is on simulator episodes later.
+    result_file: logs/shuffle_result.json   # run 2026-11-09, 20 shuffles, 33,240 circuit runs
+    result_sha256: e532bfac66e4e1bb39de526ea2f4c6237e16b08b62be7386f4bab40446b356ff
 
 cnn:
   window:                  # locked: decision 14

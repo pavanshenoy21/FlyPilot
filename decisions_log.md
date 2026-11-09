@@ -106,6 +106,9 @@ Format: date · decision · reason · who decided.
 28. **Shuffle method as implemented (Phase 7.1).** Locked decision 12, done as a configuration-model rewire: edge targets permuted across edges, each edge keeps its synapse count and transmitter; duplicates and self-edges redrawn. Wiring seeds 0-19 (their own namespace, separate from stimulus seeds). Each source keeps its total output synapses; each giant fiber keeps its number of inputs but not its total input synapses (which follow the sources it receives). Since every real source has exactly one, same-side connection, the shuffle in practice re-assigns which giant fiber each source drives. Noted before any shuffled circuit was run.
     *Decided by:* Claude, implementing locked decision 12; for Pavan's review.
 
+29. **Shuffles get the real circuit's tuning procedure, not its tuned numbers (Phase 7.2).** Each of the 20 shuffled circuits is calibrated exactly as the real one was: input gain by the same rule on the same calibration seeds and grid; symmetry check on seeds 3000-3039; per-side split only if that check fires (same grid, seeds and rule); then the held-out set. Secondary report: every shuffle on the held-out set at the real circuit's frozen gains. Metrics, ranking (ties half) and a one-sided permutation p-value written into `configs/prereg.yaml` (shuffle.synthetic_check) before any shuffled circuit was run, together with the stated expectation (side accuracy should drop, timing may not). Pipeline smoke-tested on wiring seed 99, outside the pre-registered set.
+    *Decided by:* Pavan ("Each shuffle gets the same tuning procedure", 2026-11-09), on Claude's recommendation.
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).
