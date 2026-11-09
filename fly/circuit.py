@@ -119,11 +119,17 @@ def load_circuit(
     )
 
 
-def source_drive(circuit: Circuit, frames: np.ndarray, input_gain: float = 1.0) -> np.ndarray:
-    """Input in mV for every source neuron at every frame: [T, n_sources]."""
+def source_drive(circuit: Circuit, frames: np.ndarray, input_gain=1.0) -> np.ndarray:
+    """Input in mV for every source neuron at every frame: [T, n_sources].
+    input_gain is one number, or a dict {"left": g, "right": g} (per-side gain, decisions_log 27)."""
     motion = reichardt(coarse_grid(frames)).sum(axis=1)  # both polarities: [T, 4, n, n]
     drive = np.einsum("tdij,sdij->ts", motion, circuit.kernels)
-    return np.maximum(drive, 0.0) * circuit.unit_gain_mV * input_gain
+    if isinstance(input_gain, dict):
+        side = circuit.side[circuit.source_idx]
+        gain = np.where(side == "left", input_gain["left"], input_gain["right"])
+    else:
+        gain = input_gain
+    return np.maximum(drive, 0.0) * circuit.unit_gain_mV * gain
 
 
 @dataclass
@@ -135,7 +141,7 @@ class Response:
     source_spikes: int
 
 
-def run(circuit: Circuit, frames: np.ndarray, input_gain: float) -> Response:
+def run(circuit: Circuit, frames: np.ndarray, input_gain) -> Response:
     """Run one stimulus. Frames are held for one frame period each (zero-order hold)."""
     p = circuit.params
     net = LIFNetwork(circuit.counts * p.w_syn_mV, p)

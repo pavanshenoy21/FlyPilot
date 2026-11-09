@@ -33,7 +33,7 @@ fly:
     glutamate: inhibitory
     other: drop_and_report
   synapse_weight_mV: 0.275  # fixed, published (Shiu et al. 2024); decisions_log 25 amends locked decision 3
-  input_gain: 5.623413251903491   # THE ONE TUNED NUMBER. FROZEN 2026-11-07 (Phase 6.4, confirmed by Pavan)
+  input_gain: 5.623413251903491   # THE ONE TUNED NUMBER. FROZEN 2026-11-07 (Phase 6.4, confirmed by Pavan). Per-side split below (decisions_log 27)
   input_gain_frozen:
     from: logs/calibration_result.json
     calibration_result_sha256: 86c7669ffe9eb0c14ee703788e94017f931ac5c6e93f395ac02b55aeeaf8fb3c
@@ -78,6 +78,18 @@ fly:
       stimuli: make_looming with x_m = 0 exactly; radius, speed, impact time and y_m drawn as make_stimulus does
       seeds: [3000, 3039]
       rule: if the right giant fiber fires first on more than 60% or fewer than 40% of triggered trials, switch to one input gain per side (logged deviation)
+      result: right first on 15/40 = 37.5% -> rule fired (2026-11-07); Pavan chose to apply it (2026-11-09)
+    per_side_gain:                                                # decisions_log 27, written BEFORE the tuning run
+      form: left = input_gain / a, right = input_gain * a   # keeps the geometric mean at the frozen 5.6234
+      a_grid: geomspace(1/1.3, 1.3, 21)
+      tuning_seeds: [4000, 4039]                                  # fresh centred looms (x = 0), not used anywhere else
+      rule: choose a with right-first share closest to 0.5 on the tuning seeds; ties -> a closest to 1
+      recheck: symmetry seeds 3000-3039 and the held-out set, reported, not used for tuning
+      chosen_a: 1.026583631304232                                 # FROZEN 2026-11-09 (Pavan chose option 1)
+      left_gain: 5.477793606312598
+      right_gain: 5.772903996463426
+      result_file: logs/side_gain_result.json
+      result_sha256: fae4ac81cef38217275d75669d728583734d27eb9e8e11a684b5a8d168df9ec6
     excluded_seeds: [0, 1, 2, 3, 4, 100, 101, 102, 103]           # already looked at (5.5 figure, decisions_log 25)
     gain_grid: geomspace(1, 100, 25)
     rule: >

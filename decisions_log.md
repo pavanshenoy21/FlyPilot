@@ -100,6 +100,9 @@ Format: date · decision · reason · who decided.
 26. **Input gain frozen at 5.6234 (Phase 6.4)** with hashes of the calibration result and the code in `configs/prereg.yaml`. **Re-calibration on simulator episodes:** in Phase 8, the gain is re-tuned once on 30 simulator episodes with the same pre-registered rule; that becomes the evaluation gain. Gate G2 thresholds and head-on scoring written into prereg before the held-out run (pass: hit rate lower 95% bound >= 0.8 and false-alarm rate upper 95% bound <= 0.2; side scored only when |x| >= 0.02 m).
     *Decided by:* Pavan ("yes freeze ... yess", 2026-11-07); G2 thresholds proposed by Claude, written before the run.
 
+27. **Per-side input gain (pre-registered symmetry rule applied).** The symmetry check fired (right giant fiber first on 37.5% of centred looms). Pavan chose to follow the rule (option 1, 2026-11-09) rather than log a deviation. Form, grid, fresh tuning seeds (4000-4039) and rule were written into prereg before the tuning run. Result: a = 1.0266, left gain 5.4778, right gain 5.7729 (geometric mean still the frozen 5.6234). Independent re-check on seeds 3000-3039: right first 21/40 = 52.5% (95% interval 37-67%). Held-out results unchanged (50/50 looms, 0/100 false alarms, median TTC 189 ms, side 45/46). This adds a second tuned number (the split); it is logged and frozen, and the shuffled circuits get the same treatment.
+    *Decided by:* Pavan ("1.", 2026-11-09).
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).

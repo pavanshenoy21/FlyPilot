@@ -339,3 +339,21 @@ The input is spread across many neurons; no small group dominates (the strongest
 - **Not yet acted on.** Applying the rule adds a second tuned number; waiting for Pavan.
 
 **Checks:** whole suite 108 passed; ruff clean.
+
+## 2026-11-09 — Phase 6, sub-stage 6.5b (per-side input gain, symmetry rule applied)
+
+**Decision:** Pavan chose to follow the pre-registered symmetry rule (decisions_log 27).
+
+**Done**
+- Written into prereg before the run: left = g / a, right = g x a (geometric mean stays at the frozen 5.6234), a on `geomspace(1/1.3, 1.3, 21)`, tuned on 40 fresh centred looms (seeds 4000-4039), rule = right-first share closest to 0.5, ties to a closest to 1.
+- `fly/circuit.py`: `input_gain` may now be a per-side dict. `fly/side_gain.py` runs the tuning and the re-checks (3 min 56 s). Outputs `logs/side_gain_result.json`, `logs/side_gain_symmetry_runs.csv`, `logs/side_gain_heldout_runs.csv`. Frozen values and result hash in prereg.
+- `tests/test_side_gain.py` (3 tests): geometric mean kept; choice rule incl. ties; each eye scaled separately.
+
+**Result:** a = 1.0266, left gain 5.4778, right gain 5.7729.
+- Tuning curve: right-first share 0% at a <= 0.92, 37.5% at a = 1, 60% at a = 1.027, 100% at a >= 1.20. The direction balance is very sensitive: a 2.7% tilt moves it by more than 20 points.
+- Independent re-check (symmetry seeds 3000-3039): right first 21/40 = 52.5% (95% interval 37-67%).
+- Held-out re-check with the split gains: 50/50 looms, 0/100 false alarms, median TTC 189 ms, side 45/46. Unchanged in substance.
+
+**Checks:** whole suite 111 passed; ruff clean.
+
+**Next:** Phase 7, shuffled-wiring control (degree-preserving rewiring, at least 20 seeds) run through the same frozen setup.
