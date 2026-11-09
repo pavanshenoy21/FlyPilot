@@ -103,6 +103,9 @@ Format: date · decision · reason · who decided.
 27. **Per-side input gain (pre-registered symmetry rule applied).** The symmetry check fired (right giant fiber first on 37.5% of centred looms). Pavan chose to follow the rule (option 1, 2026-11-09) rather than log a deviation. Form, grid, fresh tuning seeds (4000-4039) and rule were written into prereg before the tuning run. Result: a = 1.0266, left gain 5.4778, right gain 5.7729 (geometric mean still the frozen 5.6234). Independent re-check on seeds 3000-3039: right first 21/40 = 52.5% (95% interval 37-67%). Held-out results unchanged (50/50 looms, 0/100 false alarms, median TTC 189 ms, side 45/46). This adds a second tuned number (the split); it is logged and frozen, and the shuffled circuits get the same treatment.
     *Decided by:* Pavan ("1.", 2026-11-09).
 
+28. **Shuffle method as implemented (Phase 7.1).** Locked decision 12, done as a configuration-model rewire: edge targets permuted across edges, each edge keeps its synapse count and transmitter; duplicates and self-edges redrawn. Wiring seeds 0-19 (their own namespace, separate from stimulus seeds). Each source keeps its total output synapses; each giant fiber keeps its number of inputs but not its total input synapses (which follow the sources it receives). Since every real source has exactly one, same-side connection, the shuffle in practice re-assigns which giant fiber each source drives. Noted before any shuffled circuit was run.
+    *Decided by:* Claude, implementing locked decision 12; for Pavan's review.
+
 ## Still open from earlier planning (see `06_open_items.md`)
 
 - How to handle the differences between the abstract and the locked plan (motion front end, dodge direction, sweep sizes).

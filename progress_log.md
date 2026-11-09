@@ -357,3 +357,19 @@ The input is spread across many neurons; no small group dominates (the strongest
 **Checks:** whole suite 111 passed; ruff clean.
 
 **Next:** Phase 7, shuffled-wiring control (degree-preserving rewiring, at least 20 seeds) run through the same frozen setup.
+
+## 2026-11-09 — Phase 7, sub-stage 7.1 (degree-preserving rewire, Gate G3 check)
+
+**Done**
+- `fly/shuffle.py`: `rewire(edges, seed)` permutes the edge targets across edges (configuration model; a draw with a duplicate edge or self-connection is redrawn). Every edge keeps its synapse count and its presynaptic neuron's transmitter. `preserved()` lists the ten properties the shuffle must keep. `shuffled_circuit(seed)` is the real circuit with only the weight matrix replaced (same neurons, receptive fields, front end, gains). `main()` writes `logs/shuffle_wiring_summary.csv` for seeds 0-19.
+- `tests/test_shuffle.py` (25 tests): all ten properties hold for each of the 20 seeds (out- and in-degree of every neuron, each neuron's output synapses, total synapses, the set of synapse counts, sign counts, transmitter per neuron, no duplicates, no self-edges, edge count); the wiring changes and depends on the seed; the check catches a broken shuffle; a dense toy graph shows the redraw works; the shuffled circuit differs from the real one only in its weights.
+
+**Gate G3 (control fair?): PASS.** The shuffled circuits share every listed property with the real one; only who connects to whom changes.
+
+**Finding: what the shuffle can test on this circuit.** In the real circuit every one of the 293 sources has exactly one connection, to the giant fiber on its own side (148 left, 145 right; 100% same side). A degree-preserving rewire can therefore only change which giant fiber each source drives. Across the 20 shuffles, 43-54% of edges stay on their own side (about half, as expected), and the giant fibers' input synapses become nearly equal (880-1,005 against the real 832 left / 1,053 right). Expected consequence: the shuffle mainly tests the left/right routing (dodge side). Trigger timing may change little, since each giant fiber still collects about half of all looming drive. This is a limit of the locked control on this circuit, recorded before any shuffled run.
+
+**Cost check:** one stimulus through the circuit takes about 1.1 s, so a full re-calibration per shuffle (about 1,350 runs on 12 workers) takes about 2 minutes, and 20 shuffles about 40 minutes.
+
+**Checks:** whole suite 136 passed; ruff clean.
+
+**Next:** 7.2, running the 20 shuffles. One decision first: do the shuffles reuse the real circuit's frozen gains, or each go through the same calibration procedure?
